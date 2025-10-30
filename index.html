@@ -3,38 +3,68 @@
 
 <head>
     <meta charset="utf-8"/>
-
+    <script src="main.js" defer></script>
 </head>
 <body>
     <header>
-        <button class="logo"><img src="#" alt="logo"/></button>
+        <button id="header-logo"><img src="#" alt="logo"/></button>
         <nav>
-            <button>Home</button>
-            <button>Women</button>
-            <button>Men</button>
-            <button>Browse</button>
-            <button>About</button>
+            <button id="nav-home">Home</button>
+            <button id="nav-women">Women</button>
+            <button id="nav-men">Men</button>
+            <button id="nav-browse">Browse</button>
+            <button id="nav-home">About</button>
         </nav>
         <button>Cart <span>0</span></button>
     </header>
 
     <main>
         <article id="home">
-
+            Home
         </article>
 
         <article id="browse">
             <section id="filter">
-
+                
             </section>
             
             <section id="result">
+                result
+                <button id="clear-filter">X Clear All</button>
 
+                <template id="current-filter-template">
+                    <button class="current-filter">Some</button>
+                </template>
+                <span id="current-filters">
+                    <!-- contains current filter buttons -->
+
+                </span>
+
+                <template id="browse-product-template">
+                    <div class="browse-product">
+                        <div class="img">
+
+                        </div>
+                        <p class="title">
+
+                        </p>
+                        <p class="price">
+
+                        </p>
+                        <button class="add-product-to-cart">+</button>
+                        <hr/>
+                    </div>
+
+                </template>
+                <div id="filtered-product-container">
+                    <!-- contains products based on filters -->
+
+                </div>
             </section>
         </article>
 
         <article id="singleproduct">
-
+            single product
         </article>
     </main>
     <footer>
