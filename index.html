@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <script src="main.js" defer></script>
+    <script type="module" src="main.js"></script>
 </head>
 <body>
     <header>
@@ -15,17 +15,17 @@
             <button id="nav-browse">Browse</button>
             <button id="nav-home">About</button>
         </nav>
-        <button>Cart <span>0</span></button>
+        <button id="nav-cart">Cart <span>0</span></button>
     </header>
 
     <main>
         <article id="home">
-            Home
+            Home View
         </article>
 
         <article id="browse">
             <section id="filter">
-                
+                Filter
             </section>
             
             <section id="result">
@@ -51,7 +51,7 @@
                         <p class="price">
 
                         </p>
-                        <button class="add-product-to-cart">+</button>
+                        <button class="add-to-cart">+</button>
                         <hr/>
                     </div>
 
@@ -63,12 +63,34 @@
             </section>
         </article>
 
+        <article id="men">
+            men
+        </article>
+
+        <article id="women">
+            women
+        </article>
+
         <article id="singleproduct">
             single product
         </article>
+
+        <article id="cart">
+            Cart View
+            <template id="cart-product-template">
+                <div class="cart-product">
+                    <button class="remove-from-cart">-</button>
+                    <p class="title"></p>
+                    <p class="quantity"></p>
+                </div>
+            </template>
+            <div id="cart-product-container">
+
+            </div>
+        </article>
     </main>
     <footer>
-        <p>Hello, World!</p>
+        <p>Footer</p>
     </footer>
 </body>
 

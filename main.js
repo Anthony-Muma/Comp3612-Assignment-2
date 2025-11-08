@@ -1,19 +1,44 @@
+import { addToCart, removeFromCart, cartObject } from "./cartLogic.js";
+import { groupColors } from "./browseLogic.js"
+
 // Loading Page
 function renderBrowseProducts(products) {
+
     const productTemplate = document.querySelector("#browse-product-template");
     const parent = document.querySelector("#filtered-product-container");
+    
     for (let product of products) {
         const clone = productTemplate.content.cloneNode(true);
+        
+        const browseProduct = clone.querySelector(".browse-product")
         const title = clone.querySelector(".title");
         const price = clone.querySelector(".price");
+
+        browseProduct.dataset.productId = `${product.id}`;
         title.textContent = `${product.name}`;
         price.textContent = `${product.price}`;
+
         parent.appendChild(clone);
     }
 
-    //Sort 
+    // Events
+    parent.addEventListener("click", (e)=>{
+        const element = e.target;
+        if (element.classList.contains("add-to-cart")) {
+            const selectedProductId = element.parentNode.dataset.productId;
+            const productData = products.find(element => element.id == selectedProductId)
+            addToCart(productData)
+        // Temp
+        } else if (element.nodeName == "P") {
+            const selectedProductId = element.parentNode.dataset.productId;
+            const productData = products.find(element => element.id == selectedProductId)
+            removeFromCart(productData)
+        }
+    });
     
-    elements = Array.from(parent.querySelectorAll(".browse-product"))
+    //Sort functions
+    
+   console.log(groupColors(products))
     const nameSort = function(a,b) {
         const titleA = a.querySelector(".title").textContent;
         const titleB = b.querySelector(".title").textContent;
@@ -29,6 +54,11 @@ function renderBrowseProducts(products) {
         return priceB - priceA;
     }
 
+    //Filter Functions
+
+
+    const elements = Array.from(parent.querySelectorAll(".browse-product"))
+    
     elements.sort(priceSort);
 
     parent.innerHTML = '';
@@ -39,36 +69,48 @@ function renderBrowseProducts(products) {
 
 function renderBrowse(products) {
     renderBrowseProducts(products);
+}
 
+function loadCart() {
+    let cartData = JSON.parse(localStorage.getItem("cart"));
+
+    if (!cartData) {
+        cartData = localStorage.setItem("cart", JSON.stringify(cartObject));
+    }
+
+    // Render Cart stuff
+    const cartButtonNumber = document.querySelector("#nav-cart span");
+    cartButtonNumber.textContent = cartData.quantity;
+
+    const cartProductContainer = document.querySelector("#cart-product-container")
+    // ----
+
+    cartProductContainer.addEventListener("click", (e)=>{
+        const element = e.target;
+        if (element.classList.contains("remove-from-cart")) {
+
+        }
+    });
+
+    
 }
 
 function renderAll(products) {
     renderBrowse(products);
+    loadCart();
 }
 
 // JSON Stuff
-async function loadLocalJson(filePath) {
-  try {
-    const response = await fetch(filePath);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error("Error loading JSON file:", error);
-  }
+function loadLocalJson(filePath) {
+    fetch(filePath)
+    .then(response => response.json())
+    .then(data => {
+        return data;
+    });
 }
 
 // Example usage (assuming 'data.json' is in the same directory or accessible via a relative path)
-loadLocalJson('./data/data-minifed.json').then(jsonData => {
-  if (jsonData) {
-    // Process your JSON data here
-    renderAll(jsonData);
-    console.log("Loaded JSON data:", jsonData);
-  }
-}); 
+
 
 // hides 
 function swapView(articleId) {
@@ -88,10 +130,29 @@ function swapView(articleId) {
 
 document.addEventListener("DOMContentLoaded", ()=>{
     console.log("DOM loaded");
+
+    //Event
     document.querySelector("#nav-home").addEventListener("click", ()=>{swapView("home")});
     document.querySelector("#nav-women").addEventListener("click", ()=>{swapView("women")});
     document.querySelector("#nav-men").addEventListener("click", ()=>{swapView("men")});
     document.querySelector("#nav-browse").addEventListener("click", ()=>{swapView("browse")});
+    document.querySelector("#nav-cart").addEventListener("click", ()=>{swapView("cart")});
+    
+
+    const productData = localStorage.getItem("productData")
+    
+    if (!productData) {
+        fetch("./data/data-minifed.json")
+        .then(response => response.json())
+        .then(data => {
+            // Process your JSON data here
+            localStorage.setItem("productData", JSON.stringify(data))
+            renderAll(data);
+        });
+                
+    } else {
+        renderAll(JSON.parse(productData));
+    }
 });
 
 
