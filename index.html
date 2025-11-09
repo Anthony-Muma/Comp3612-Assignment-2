@@ -8,9 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <header>
-        <button id="header-logo"><img src="#" alt="logo"/></button>
-        <nav>
+    <header class="flex flex-row justify-around content-center font-extrabold text-lg w-full h-32">
+        <button id="header-logo" class="size-32"><img src="data/logo.webp" alt="logo"/></button>
+        <nav class="flex content-center gap-2">
             <button id="nav-home">Home</button>
             <button id="nav-women">Women</button>
             <button id="nav-men">Men</button>
@@ -25,12 +25,12 @@
             Home View
         </article>
 
-        <article id="browse">
-            <section id="filter">
+        <article id="browse" class="flex flex-row">
+            <section id="filter" class="">
                 Filter
             </section>
             
-            <section id="result" class="bg-blue-500">
+            <section id="result" class="">
                 result
                 <button id="clear-filter">X Clear All</button>
 
@@ -43,7 +43,7 @@
                 </span>
 
                 <template id="browse-product-template">
-                    <div class="browse-product">
+                    <div class="browse-product flex flex-col text-center content-center justify-center bg-slate-300 w-32 h-32 m-4">
                         <div class="img">
 
                         </div>
@@ -53,12 +53,11 @@
                         <p class="price">
 
                         </p>
-                        <button class="add-to-cart">+</button>
-                        <hr/>
+                        <button class="add-to-cart ">+</button>
                     </div>
 
                 </template>
-                <div id="filtered-product-container">
+                <div id="filtered-product-container" class="gap-4 flex flex-row flex-wrap justify-center-center h-screen overflow-y-scroll">
                     <!-- contains products based on filters -->
 
                 </div>
@@ -80,10 +79,10 @@
         <article id="cart">
             Cart View
             <template id="cart-product-template">
-                <div class="cart-product">
-                    <button class="remove-from-cart">-</button>
+                <div class="cart-product flex flex-col text-center content-center justify-center bg-slate-300 w-32 h-32 m-4">
                     <p class="title"></p>
                     <p class="quantity"></p>
+                    <button class="remove-from-cart">-</button>
                 </div>
             </template>
             <div id="cart-product-container">

@@ -1,4 +1,20 @@
-// RENDER STUFF
+// OBJECT CONSTRUCTORS
+
+function singleCartItemObject (id, quantity, name, price, color, size) {
+  this.id = id;
+  this.quantity = quantity;
+  this.name = name;
+  this.price = price;
+  this.color = color;
+  this.size = size;
+}
+
+function cartObject() {
+    this.quantity = 0,
+    this.content = []
+}
+
+// HTML STUFF -------------------------------------------------------------------------------
 
 // Example productData
 /** @type {productData} */
@@ -53,19 +69,22 @@ const productData = {
  * console.log(result); // true
  */
 
+
 /**
  * 
- * @param {productData} productData 
  * @param {*} cartItemData 
  */
-function createSingleCartProductHtml(productData, cartItemData) {
+function createSingleCartProductHtml(cartItemData) {
     const container = document.querySelector("#cart-product-container");
     const template = document.querySelector("#cart-product-template");
     const clone = template.content.cloneNode(true);
 
-    clone.querySelector(".title").textContent = productData.name;
+    clone.querySelector(".title").textContent = cartItemData.name;
     clone.querySelector(".quantity").textContent = cartItemData.quantity;
-    clone.querySelector(".cart-product").dataset.productId = productData.id
+
+    clone.querySelector(".cart-product").dataset.productId = cartItemData.id
+    clone.querySelector(".cart-product").dataset.color = cartItemData.color
+    clone.querySelector(".cart-product").dataset.size = cartItemData.size
 
     container.appendChild(clone);
 }
@@ -80,7 +99,7 @@ function updateCartProductHtml(element, cartItemData) {
 }
 
 function removeCartProductHtml(element) {
-    element.removeNode
+    element.remove();
 }
 
 function updateCartButton(cartData) {
@@ -88,39 +107,90 @@ function updateCartButton(cartData) {
     cartButtonNumber.textContent = cartData.quantity;
 }
 
-// LOGIC
+// LOGIC -------------------------------------------------------------------------------
 
-export function addToCart(productData) {
+export function addToCart(productData, quantity=1, color="#ffffff", size="M") { //
     //localStorage.setItem("cart", JSON.stringify(cartObject))
-    const cartData = JSON.parse(localStorage.getItem("cart"))
-    const cartItemData = cartData.content.find(item => (item.id == productData.id))
+    const cartData = JSON.parse(localStorage.getItem("cart"));
+    let cartItemData = cartData.content.find(item => (item.id == productData.id)); // When size and color are add, adjust condition
+    
+    // Check if product was found within cart
     if (cartItemData) {
 
         //Logic
-        cartItemData.quantity += 1;
-        cartData.quantity += 1;
+        cartItemData.quantity += quantity;
+        cartData.quantity += quantity;
 
         // update cart HTML
-        const cartItemHtml = document.querySelectorAll(`#cart-product-container [data-id='${productData.id}']`);
+        const cartItemHtml = document.querySelector(`#cart-product-container [data-product-id='${productData.id}']`);
         updateCartProductHtml(cartItemHtml, cartItemData)
         
-
     // Create cart item if DNE  
     } else {
 
         // Logic
-        cartData.content.push({id : productData.id, quantity : 1});
-        cartData.quantity += 1;
+        cartItemData = new singleCartItemObject(productData.id, quantity, productData.name, productData.price, color, size)
+        cartData.content.push(cartItemData);
+        cartData.quantity += quantity;
 
         // create cart HTML
-        createSingleCartProductHtml(productData, cartItemData)
+        createSingleCartProductHtml(cartItemData);
 
     }
     
     //update cart icon button
-    updateCartButton(cartData)
+    updateCartButton(cartData);
     
     //...
-    localStorage.setItem("cart", JSON.stringify(cartData))
+    localStorage.setItem("cart", JSON.stringify(cartData));
 }
 
+export function removeFromCart(id, cartElement) { // Add Color and Size
+    const cartData = JSON.parse(localStorage.getItem("cart"));
+    const cartItemDataIndex = cartData.content.findIndex(item => (item.id == id)); // When size and color are add, adjust condition
+    let cartItemData = cartData.content[cartItemDataIndex];
+
+    // Check if product was found within cart
+    if (cartItemData) {
+      //Logic
+      cartItemData.quantity -= 1;
+      cartData.quantity -= 1;
+
+      // update cart HTML
+      updateCartProductHtml(cartElement, cartItemData);
+      if (cartItemData.quantity <= 0) {
+        cartData.content.splice(cartItemDataIndex, 1);
+        removeCartProductHtml(cartElement);
+      }
+      
+      if (cartData.quantity <= 0) {
+        cartData.quantity = 0
+        // Display cart empty
+      }
+    }
+
+    //update cart icon button
+    updateCartButton(cartData);
+    
+    //...
+    localStorage.setItem("cart", JSON.stringify(cartData));
+}
+
+// MAIN -------------------------------------------------------------------------------
+
+export function renderCart(products) {
+  let cartData = JSON.parse(localStorage.getItem("cart"));
+
+  // Render Existing Cart
+  if (cartData) {
+    cartData.content.forEach(cartItemData => {createSingleCartProductHtml(cartItemData);});
+
+  // Create cart within local storage
+  } else {
+    cartData = new cartObject();
+    localStorage.setItem("cart", JSON.stringify(cartData));
+  }
+  
+  // Display correct cart count
+  updateCartButton(cartData);
+}

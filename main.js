@@ -1,116 +1,41 @@
-import { addToCart, removeFromCart, cartObject } from "./cartLogic.js";
-import { groupColors } from "./browseLogic.js"
+//import { addToCart, removeFromCart, cartObject } from "./cartLogic.js";
+import { addToCart, renderCart, removeFromCart} from "./WIP/cart.js";
+import { renderBrowse } from "./WIP/browse.js"
 
-// Loading Page
-function renderBrowseProducts(products) {
+function loadBrowse(products) {
+    renderBrowse(products);
 
-    const productTemplate = document.querySelector("#browse-product-template");
-    const parent = document.querySelector("#filtered-product-container");
-    
-    for (let product of products) {
-        const clone = productTemplate.content.cloneNode(true);
-        
-        const browseProduct = clone.querySelector(".browse-product")
-        const title = clone.querySelector(".title");
-        const price = clone.querySelector(".price");
-
-        browseProduct.dataset.productId = `${product.id}`;
-        title.textContent = `${product.name}`;
-        price.textContent = `${product.price}`;
-
-        parent.appendChild(clone);
-    }
-
-    // Events
-    parent.addEventListener("click", (e)=>{
+    // Browse Events
+    document.querySelector("#filtered-product-container").addEventListener("click", (e)=>{
         const element = e.target;
         if (element.classList.contains("add-to-cart")) {
             const selectedProductId = element.parentNode.dataset.productId;
             const productData = products.find(element => element.id == selectedProductId)
-            addToCart(productData)
-        // Temp
+            addToCart(productData);
         } else if (element.nodeName == "P") {
-            const selectedProductId = element.parentNode.dataset.productId;
-            const productData = products.find(element => element.id == selectedProductId)
-            removeFromCart(productData)
+            // ...
         }
     });
-    
-    //Sort functions
-    
-   console.log(groupColors(products))
-    const nameSort = function(a,b) {
-        const titleA = a.querySelector(".title").textContent;
-        const titleB = b.querySelector(".title").textContent;
-        if (titleA > titleB) return 1
-        else if (titleA < titleB) return -1
-        else return 0
-        
-
-    }
-    const priceSort = function(a,b) {
-        const priceA = a.querySelector(".price").textContent;
-        const priceB = b.querySelector(".price").textContent;
-        return priceB - priceA;
-    }
-
-    //Filter Functions
-
-
-    const elements = Array.from(parent.querySelectorAll(".browse-product"))
-    
-    elements.sort(priceSort);
-
-    parent.innerHTML = '';
-    for (let element of elements) {
-        parent.appendChild(element)
-    }
 }
 
-function renderBrowse(products) {
-    renderBrowseProducts(products);
-}
+function loadCart(products) {
+    renderCart(products);
 
-function loadCart() {
-    let cartData = JSON.parse(localStorage.getItem("cart"));
-
-    if (!cartData) {
-        cartData = localStorage.setItem("cart", JSON.stringify(cartObject));
-    }
-
-    // Render Cart stuff
-    const cartButtonNumber = document.querySelector("#nav-cart span");
-    cartButtonNumber.textContent = cartData.quantity;
-
-    const cartProductContainer = document.querySelector("#cart-product-container")
-    // ----
-
-    cartProductContainer.addEventListener("click", (e)=>{
+    // Cart Events
+    document.querySelector("#cart-product-container").addEventListener("click", (e) => {
         const element = e.target;
-        if (element.classList.contains("remove-from-cart")) {
 
+        if (element.classList.contains("remove-from-cart")) {
+            const parent = element.parentNode;
+            removeFromCart(parent.dataset.productId, parent); // Add color and size
         }
     });
-
+}
+function renderAll(products) {
+    loadBrowse(products)
+    loadCart(products);
     
 }
-
-function renderAll(products) {
-    renderBrowse(products);
-    loadCart();
-}
-
-// JSON Stuff
-function loadLocalJson(filePath) {
-    fetch(filePath)
-    .then(response => response.json())
-    .then(data => {
-        return data;
-    });
-}
-
-// Example usage (assuming 'data.json' is in the same directory or accessible via a relative path)
-
 
 // hides 
 function swapView(articleId) {
@@ -138,6 +63,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     document.querySelector("#nav-browse").addEventListener("click", ()=>{swapView("browse")});
     document.querySelector("#nav-cart").addEventListener("click", ()=>{swapView("cart")});
     
+    swapView("home");
 
     const productData = localStorage.getItem("productData")
     
