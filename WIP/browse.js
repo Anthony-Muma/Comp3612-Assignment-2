@@ -1,7 +1,58 @@
-export function renderBrowse(products) {
+const activeFilters = {
+    gender : [],
+    category : []
+    // size : [],
+    // color : []
+}
+
+// HTML STUFF -------------------------------------------------------------------------------
+function createSingleProductHtml(product) {
+    const productTemplate = document.querySelector("#browse-product-template");
+    const parent = document.querySelector("#filtered-product-container");
+
+    const clone = productTemplate.content.cloneNode(true);
+        
+    const browseProduct = clone.querySelector(".browse-product")
+    const title = clone.querySelector(".title");
+    const price = clone.querySelector(".price");
+
+    browseProduct.dataset.productId = `${product.id}`;
+    title.textContent = `${product.name}`;
+    price.textContent = `${product.price}`;
+
+    parent.appendChild(clone);
+}
+
+// LOGIC -------------------------------------------------------------------------------
+// i.e {color: "black"} or {gender: "male"}
+export function addFilter(products, filterObject) {
+
+    //Add filter to others
+    for (let property in filterObject) {
+        activeFilters[property].push(filterObject[property]);
+    }
+    
+    // Filter the products
+    const subSet = products.filter(product => {
+        for (let property in activeFilters) {
+            for (let f of activeFilters[property]) {
+                if (product[property] != f) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    });
+    console.log(subSet);
+    renderBrowse(subSet);
+}
+
+// MAIN -------------------------------------------------------------------------------
+export function renderBrowse(products, sort=undefined) {
 
     const productTemplate = document.querySelector("#browse-product-template");
     const parent = document.querySelector("#filtered-product-container");
+    parent.innerHTML = '';
     
     for (let product of products) {
         const clone = productTemplate.content.cloneNode(true);
@@ -11,7 +62,7 @@ export function renderBrowse(products) {
         const price = clone.querySelector(".price");
 
         browseProduct.dataset.productId = `${product.id}`;
-        title.textContent = `${product.name}`;
+        title.textContent = `${product.name} + ${product.gender} + ${product.category}`;
         price.textContent = `${product.price}`;
 
         parent.appendChild(clone);

@@ -1,10 +1,11 @@
 //import { addToCart, removeFromCart, cartObject } from "./cartLogic.js";
 import { addToCart, renderCart, removeFromCart} from "./WIP/cart.js";
-import { renderBrowse } from "./WIP/browse.js"
+import { renderBrowse, addFilter} from "./WIP/browse.js"
 
 function loadBrowse(products) {
     renderBrowse(products);
-
+    addFilter(products, {gender : "mens"});
+    addFilter(products, {category : "Outerwear"});
     // Browse Events
     document.querySelector("#filtered-product-container").addEventListener("click", (e)=>{
         const element = e.target;
