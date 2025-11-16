@@ -2,14 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <script type="module" src="main.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
     <header class="flex flex-row justify-around content-center font-extrabold text-lg w-full h-32">
-        <button id="header-logo" class="size-32"><img src="data/logo.webp" alt="logo"/></button>
+        <button id="header-logo" class="size-32"><img src="data/logo.webp" alt="logo" /></button>
         <nav class="flex content-center gap-2">
             <button id="nav-home">Home</button>
             <button id="nav-women">Women</button>
@@ -29,7 +30,7 @@
             <section id="filter" class="bg-cyan-950 border-red-50">
                 Filter
             </section>
-            
+
             <section id="result" class="">
                 result
                 <button id="clear-filter">X Clear All</button>
@@ -43,7 +44,8 @@
                 </span>
 
                 <template id="browse-product-template">
-                    <div class="browse-product flex flex-col text-center content-center justify-center bg-slate-300 w-32 h-64 m-4">
+                    <div
+                        class="browse-product flex flex-col text-center content-center justify-center bg-slate-300 w-32 h-64 m-4">
                         <div class="img">
 
                         </div>
@@ -57,7 +59,8 @@
                     </div>
 
                 </template>
-                <div id="filtered-product-container" class="gap-4 flex flex-row flex-wrap justify-center-center h-screen overflow-y-scroll">
+                <div id="filtered-product-container"
+                    class="gap-4 flex flex-row flex-wrap justify-center-center h-screen overflow-y-scroll">
                     <!-- contains products based on filters -->
 
                 </div>
@@ -77,18 +80,90 @@
         </article>
 
         <article id="cart">
-            Cart View
+            <h1 class="text-2xl font-bold mb-4">Shopping Cart</h1>
+            
+            <!-- First, create the table structure -->
+            <table class="w-full border-collapse border border-gray-300 mb-6">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-2 text-left">Items</th>
+                        <th class="border border-gray-300 p-2 text-left">Color</th>
+                        <th class="border border-gray-300 p-2 text-left">Size</th>
+                        <th class="border border-gray-300 p-2 text-left">Price</th>
+                        <th class="border border-gray-300 p-2 text-left">Quantity</th>
+                        <th class="border border-gray-300 p-2 text-left">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-product-container">
+                    <!-- Cart items (rows) will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        
+            <!-- Now the template for a single cart item row -->
             <template id="cart-product-template">
-                <div class="cart-product flex flex-col text-center content-center justify-center bg-slate-300 w-32 h-32 m-4">
-                    <p class="title"></p>
-                    <p class="quantity"></p>
-                    <button class="remove-from-cart">-</button>
-                </div>
+                <tr class="cart-product border-b border-gray-300">
+                    <!-- Column 1: Items (delete button, image, title) -->
+                    <td class="border border-gray-300 p-2">
+                        <div class="flex items-center gap-2">
+                            <!-- Delete button (minus sign) -->
+                            <button class="remove-from-cart text-red-500 font-bold hover:text-red-700 
+                                           w-6 h-6 flex items-center justify-center border border-gray-300" >
+                                -
+                            </button>
+                            
+                            <!-- Image placeholder -->
+                            <div class="w-16 h-16 bg-gray-200 flex items-center justify-center border border-gray-300">
+                                <span class="text-xs text-gray-500">placeholder</span>
+                            </div>
+                            
+                            <!-- Product title -->
+                            <span class="title font-medium"></span>
+                        </div>
+                    </td>
+                    
+                    <!-- Column 2: Color (colored square) -->
+                    <td class="border border-gray-300 p-2">
+                        <div class="w-8 h-8 border border-gray-300 cart-color" 
+                             style="background-color: #000000;">
+                        </div>
+                    </td>
+                    
+                    <!-- Column 3: Size (badge) -->
+                    <td class="border border-gray-300 p-2">
+                        <span class="size bg-gray-200 px-2 py-1 rounded text-sm"></span>
+                    </td>
+                    
+                    <!-- Column 4: Price -->
+                    <td class="border border-gray-300 p-2">
+                        <span class="price"></span>
+                    </td>
+                    
+                    <!-- Column 5: Quantity -->
+                    <td class="border border-gray-300 p-2">
+                        <span class="quantity"></span>
+                    </td>
+                    
+                    <!-- Column 6: Subtotal -->
+                    <td class="border border-gray-300 p-2">
+                        <span class="subtotal"></span>
+                    </td>
+                </tr>
             </template>
-            <div id="cart-product-container">
-
-            </div>
         </article>
+
+
+
+
+
+
+
+
+
+
+
+        </tr>
+
+        </template>
     </main>
     <footer>
         <p>Footer</p>

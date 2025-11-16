@@ -27,7 +27,7 @@ function loadCart(products) {
         const element = e.target;
 
         if (element.classList.contains("remove-from-cart")) {
-            const parent = element.parentNode;
+            const parent = element.closest(".cart-product");
             removeFromCart(parent.dataset.productId, parent); // Add color and size
         }
     });
