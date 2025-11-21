@@ -124,11 +124,11 @@ function updateCartButton(cartData) {
 export function addToCart(productData, quantity = 1, color = "#ffffff", size = "M") { //
   //localStorage.setItem("cart", JSON.stringify(cartObject))
   const cartData = JSON.parse(localStorage.getItem("cart"));
-  let cartItemData = cartData.content.find(item => 
-    item.id === productData.id && 
-    item.color === color && 
+  let cartItemData = cartData.content.find(item =>
+    item.id === productData.id &&
+    item.color === color &&
     item.size === size
-); // When size and color are add, adjust condition
+  ); // When size and color are add, adjust condition
 
   // Check if product was found within cart
   if (cartItemData) {
@@ -180,7 +180,7 @@ export function removeFromCart(id, size, color, cartItemHtml) { // Add Color and
 
     // update cart HTML
     updateCartProductHtml(cartItemHtml, cartItemData);
-    //*NOTE TO ANT THIS CAN BE TURNED INTO A FUNCTION OR CONDENSED INTO UPDATE CARTPRODUCTHTML
+    //*NOTE TO ANT THIS CAN BE TURNED INTO A FUNCTION OR CONDENSED INTO UPDATECARTPRODUCT
     const newSubTotal = cartItemData.price * cartItemData.quantity;
     cartItemHtml.querySelector(".subtotal").textContent = money(newSubTotal);
     if (cartItemData.quantity <= 0) {
@@ -302,6 +302,10 @@ function handleCheckout() {
 
   const emptyCart = { quantity: 0, content: [] };
   localStorage.setItem("cart", JSON.stringify(emptyCart)); //forgot to set a new cart on checkout
+  //TODO must reset the checkout /footer
+  document.querySelector("#cart-footer").classList.toggle("hidden");
+  document.querySelector("#cart-empty-message").classList.toggle("hidden");
+
 
   // Reset UI
   document.querySelector("#cart-product-container").innerHTML = "";
