@@ -82,6 +82,18 @@ function createSingleCartProductHtml(cartItemData) {
   clone.querySelector(".title").textContent = cartItemData.name;
   clone.querySelector(".quantity").textContent = cartItemData.quantity;
 
+  clone.querySelector(".price").textContent = money(cartItemData.price); //formatted price
+
+  const lineTotal = cartItemData.price * cartItemData.quantity;
+  clone.querySelector(".subtotal").textContent = money(lineTotal); // subtotal for one specific row
+
+  clone.querySelector(".size").textContent = cartItemData.size // size
+  const colorBox = clone.querySelector(".cart-color");
+
+  colorBox.style.backgroundColor = cartItemData.color;
+  colorBox.title = cartItemData.color;
+
+
   clone.querySelector(".cart-product").dataset.productId = cartItemData.id
   clone.querySelector(".cart-product").dataset.color = cartItemData.color
   clone.querySelector(".cart-product").dataset.size = cartItemData.size
@@ -112,7 +124,11 @@ function updateCartButton(cartData) {
 export function addToCart(productData, quantity = 1, color = "#ffffff", size = "M") { //
   //localStorage.setItem("cart", JSON.stringify(cartObject))
   const cartData = JSON.parse(localStorage.getItem("cart"));
-  let cartItemData = cartData.content.find(item => (item.id == productData.id)); // When size and color are add, adjust condition
+  let cartItemData = cartData.content.find(item => 
+    item.id === productData.id && 
+    item.color === color && 
+    item.size === size
+); // When size and color are add, adjust condition
 
   // Check if product was found within cart
   if (cartItemData) {
@@ -122,8 +138,13 @@ export function addToCart(productData, quantity = 1, color = "#ffffff", size = "
     cartData.quantity += quantity;
 
     // update cart HTML
-    const cartItemHtml = document.querySelector(`#cart-product-container [data-product-id='${productData.id}']`);
-    updateCartProductHtml(cartItemHtml, cartItemData)
+    const rowSelect = `#cart-product-container [data-product-id='${productData.id}'][data-color='${color}'][data-size='${size}']`
+    const cartItemHtml = document.querySelector(rowSelect);
+    updateCartProductHtml(cartItemHtml, cartItemData);
+    //update subtotal column
+    const newSubTotal = cartItemData.price * cartItemData.quantity;
+    cartItemHtml.querySelector(".subtotal").textContent = money(newSubTotal);
+
 
     // Create cart item if DNE  
   } else {
@@ -146,9 +167,9 @@ export function addToCart(productData, quantity = 1, color = "#ffffff", size = "
   updateOrderSummary();
 }
 
-export function removeFromCart(id, cartElement) { // Add Color and Size
+export function removeFromCart(id, size, color, cartItemHtml) { // Add Color and Size
   const cartData = JSON.parse(localStorage.getItem("cart"));
-  const cartItemDataIndex = cartData.content.findIndex(item => (item.id == id)); // When size and color are add, adjust condition
+  const cartItemDataIndex = cartData.content.findIndex(item => (item.id == id && item.size == size && item.color == color)); // When size and color are add, adjust condition
   let cartItemData = cartData.content[cartItemDataIndex];
 
   // Check if product was found within cart
@@ -158,10 +179,13 @@ export function removeFromCart(id, cartElement) { // Add Color and Size
     cartData.quantity -= 1;
 
     // update cart HTML
-    updateCartProductHtml(cartElement, cartItemData);
+    updateCartProductHtml(cartItemHtml, cartItemData);
+    //*NOTE TO ANT THIS CAN BE TURNED INTO A FUNCTION OR CONDENSED INTO UPDATE CARTPRODUCTHTML
+    const newSubTotal = cartItemData.price * cartItemData.quantity;
+    cartItemHtml.querySelector(".subtotal").textContent = money(newSubTotal);
     if (cartItemData.quantity <= 0) {
       cartData.content.splice(cartItemDataIndex, 1);
-      removeCartProductHtml(cartElement);
+      removeCartProductHtml(cartItemHtml);
     }
 
     if (cartData.quantity <= 0) {
@@ -208,7 +232,7 @@ export function renderCart(products) {
   const methodSelect = document.querySelector("#cart-shipping-method");
   const checkoutBtn = document.querySelector("#btn-checkout");
 
- 
+
   //can just use .onchange = 
   destSelect.onchange = updateOrderSummary;
   methodSelect.onchange = updateOrderSummary;
@@ -240,7 +264,7 @@ function updateOrderSummary() {
   if (!cartData) return;
 
   // A. Calculate Merchandise Total
-  const merchTotal = cartData.content.reduce((sum, item) => sum + (item.price * item.quantity), 0); 
+  const merchTotal = cartData.content.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   //@Anthony, this basically just takes an accumulator sum and increments it for each (item * quantity)
   // the 0 parameter is what sum starts at.
 
@@ -277,7 +301,7 @@ function handleCheckout() {
   document.querySelector("#nav-home").click(); // Navigate home
 
   const emptyCart = { quantity: 0, content: [] };
-    localStorage.setItem("cart", JSON.stringify(emptyCart)); //forgot to set a new cart on checkout
+  localStorage.setItem("cart", JSON.stringify(emptyCart)); //forgot to set a new cart on checkout
 
   // Reset UI
   document.querySelector("#cart-product-container").innerHTML = "";

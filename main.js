@@ -28,7 +28,7 @@ function loadCart(products) {
 
         if (element.classList.contains("remove-from-cart")) {
             const parent = element.closest(".cart-product");
-            removeFromCart(parent.dataset.productId, parent); // Add color and size
+            removeFromCart(parent.dataset.productId,parent.dataset.size,parent.dataset.color, parent); // Add color and size
         }
     });
 }
