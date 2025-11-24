@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <script type="module" src="main.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    
+    <header>
+        <button id="header-logo">
+            <img src="data/logo.webp" alt="logo"/>
+        </button>
+        
+        <nav>
+            <button id="nav-home">Home</button>
+            <button id="nav-women">Women</button>
+            <button id="nav-men">Men</button>
+            <button id="nav-browse">Browse</button>
+            <button id="nav-about">About</button>
+        </nav>
+
+        <button id="nav-cart">
+            Cart (<span>0</span>)
+        </button>
+    </header>
+
+    <main>
+        <article id="home">
+            Home View
+        </article>
+
+        <article id="browse">
+            
+            <section id="filter">
+                <h2>Filter By</h2>
+
+                <div class="filter">
+                    <button class="filter-toggle" data-filter="gender">
+                        Gender <span>+</span>
+                    </button>
+                    <div class="filter-dropdown" id="gender-filter" data-type="single">
+                        <button class="filter-button" data-key="gender" data-value="mens">Mens</button>
+                        <button class="filter-button" data-key="gender" data-value="womens">Womens</button>
+                    </div>
+                </div>
+
+                <div class="filter">
+                    <button class="filter-toggle" data-filter="category">
+                        Category <span>+</span>
+                    </button>
+                    <div class="filter-dropdown" id="category-filter" data-type="single"></div>
+                </div>
+
+                <div class="filter">
+                    <button class="filter-toggle" data-filter="sizes">
+                        Size <span>+</span>
+                    </button>
+                    <div class="filter-dropdown" id="sizes-filter" data-type="single"></div>
+                </div>
+
+                <div class="filter">
+                    <button class="filter-toggle" data-filter="color">
+                        Color <span>+</span>
+                    </button>
+                    <div class="filter-dropdown" id="colorGroup-filter" data-type="single"></div>
+                </div>
+            </section>
+            
+            <section id="result">
+                <div id="active-filters">
+                    <button id="clear-filter">Clear All</button>
+                    <span id="current-filters"></span>
+                </div>
+
+                <div id="filtered-product-container">
+                    </div>
+            </section>
+        </article>
+
+        <article id="men">
+            <h1>Men's Collection</h1>
+            <div id="mens-categories"></div>
+        </article>
+
+        <article id="women">
+            <h1>Women's Collection</h1>
+            <div id="womens-categories"></div>
+        </article>
+
+        <article id="singleproduct">
+             <nav>
+                <span id="sp-breadcrumb-home">Home</span> &gt; 
+                <span id="sp-breadcrumb-gender">Gender</span> &gt; 
+                <span id="sp-breadcrumb-category">Category</span> &gt; 
+                <span id="sp-breadcrumb-title">Product Title</span>
+            </nav>
+            <div>
+                <div>
+                    <div>Main Product Image</div>
+                    <div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <div>
+                    <h1 id="sp-title">Product Title</h1>
+                    <p id="sp-price">$0.00</p>
+                    <div>
+                        <div>
+                            <h3>Color</h3>
+                            <div id="sp-colors"></div>
+                        </div>
+                        <div>
+                            <h3>Size</h3>
+                            <div id="sp-sizes"></div>
+                        </div>
+                        <div>
+                            <h3>Material</h3>
+                            <span id="sp-material">Cotton</span>
+                        </div>
+                        <div>
+                            <div>
+                                <label>Qty</label>
+                                <input type="number" id="sp-quantity" value="1" min="1">
+                            </div>
+                            <button id="sp-add-btn">Add to Shopping Bag</button>
+                        </div>
+                        <div>
+                             <h3>Description</h3>
+                            <p id="sp-description">Product description...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section>
+                <h2>Style With</h2>
+                <div id="sp-related-container"></div>
+            </section>
+        </article>
+
+        <article id="cart">
+            <h1>Shopping Bag</h1>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Color</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-product-container"></tbody>
+                </table>
+                <p id="cart-empty-message">Your shopping bag is empty.</p>
+            </div>
+            <div id="cart-footer">
+                <section>
+                    <h2>Shipping Details</h2>
+                    <div>
+                        <div>
+                             <label>Destination</label>
+                            <select id="cart-destination">
+                                <option value="Canada">Canada</option>
+                                <option value="US">United States</option>
+                                <option value="Int">International</option>
+                            </select>
+                        </div>
+                        <div>
+                             <label>Method</label>
+                            <select id="cart-shipping-method">
+                                <option value="Standard">Standard</option>
+                                <option value="Express">Express</option>
+                                <option value="Priority">Priority</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p>* Free shipping on orders over $500</p>
+                </section>
+                <section>
+                    <div>
+                        <h2>Order Summary</h2>
+                        <div><span>Merchandise</span><span id="summary-merchandise">$0.00</span></div>
+                        <div><span>Shipping</span><span id="summary-shipping">$0.00</span></div>
+                        <div><span>Tax <span id="tax-label"></span></span><span id="summary-tax">$0.00</span></div>
+                        <div><span>Total</span><span id="summary-total">$0.00</span></div>
+                    </div>
+                    <button id="btn-checkout">Proceed to Checkout</button>
+                </section>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p>© 2025 Fashion Retailer. All Rights Reserved.</p>
+    </footer>
+
+    <template id="filter-template">
+        <button>
+            <p class="title"></p>
+        </button>
+    </template>
+
+    <template id="browse-product-template">
+        <div class="browse-product">
+            
+            <div>
+                <img scr="#" alt=""/>
+            </div>
+
+            <button class="add-to-cart">
+                <span>+</span>
+            </button>
+            
+            <div>
+                <div>
+                     <p class="title"></p>
+                    <p class="price"></p>
+                </div>
+            </div>
+
+            <div class="hidden">
+                <div class="sizes"><span>M</span></div>
+                <div class="colors"><span></span></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="gender-category-template">
+        <div class="gender-category" data-gender="" data-category="">
+            <img src="#" alt="Category"/>
+            <div>
+                <p class="category-name">FOO</p>
+                <p>Explore Collection</p>
+            </div>
+        </div>
+    </template>
+
+    <template id="filter-option-template">
+        <button class="filter-button" data-key="category" data-value="Tops">Tops</button>
+    </template>
+
+    <template id="cart-product-template">
+        <tr class="cart-product">
+            <td>
+                <div>
+                    <button class="remove-from-cart">×</button>
+                    <div>
+                        <div></div> 
+                    </div>
+                    <span class="title"></span>
+                </div>
+            </td>
+            <td><div class="cart-color"></div></td>
+            <td><span class="size"></span></td>
+            <td><span class="price"></span></td>
+            <td><span class="quantity"></span></td>
+            <td><span class="subtotal"></span></td>
+        </tr>
+    </template>
+    <article id="toast">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        
+        <span id="toast-message">Item Added to Bag</span>
+    </article>
+
+</body>
+</html>
