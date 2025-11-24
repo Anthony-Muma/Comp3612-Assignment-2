@@ -139,15 +139,22 @@ function populateSingleProduct(product, allProducts) { // <--- Updated Signature
 
 // }
 function loadBrowse(products) {
+    // 1. Initialize Filter Options
     initBrowse(products);
 
-    
+    // 2. Product Grid Event Listener (Quick Add & View Product)
     const productContainer = document.querySelector("#filtered-product-container");
-    productContainer.addEventListener("click", (e) => {
+    
+    // Prevent duplicate listeners if loadBrowse is run multiple times
+    const newProductContainer = productContainer.cloneNode(true);
+    productContainer.parentNode.replaceChild(newProductContainer, productContainer);
+
+    newProductContainer.addEventListener("click", (e) => {
         const element = e.target;
         const card = element.closest(".browse-product"); 
         if (!card) return; 
     
+        // Case A: Quick Add (+) Button
         if (element.classList.contains("add-to-cart") || element.closest(".add-to-cart")) {
             const productId = card.dataset.productId; 
             const productData = products.find(p => p.id == productId);
@@ -160,22 +167,60 @@ function loadBrowse(products) {
             return;
         }
     
+        // Case B: View Single Product
         const productId = card.dataset.productId;
         const productData = products.find(p => p.id == productId); 
     
         if (productData) {
-            
             populateSingleProduct(productData, products); 
             swapView("singleproduct");
             window.scrollTo(0,0);
         }
     });
 
-    // Related products
+    // 3. Filter Tag Events (Clear All & Remove Tag)
+    const filterTagContainer = document.querySelector("#active-filters");
+    const newFilterTagContainer = filterTagContainer.cloneNode(true);
+    filterTagContainer.parentNode.replaceChild(newFilterTagContainer, filterTagContainer);
 
+    newFilterTagContainer.addEventListener("click", (e) => {
+        const button = e.target.closest("button");
+        if (!button) return;
 
+        if (button.id === "clear-filter") {
+            clearAllFilters(products);
+        } else if (button.dataset.key) {
+            removeFilter(products, button.dataset.key, button.dataset.value);
+        }
+    });
+
+    // 4. Filter Menu Sidebar Events 
+    const filterMenuContainer = document.querySelector("#filter");
+    const newFilterMenuContainer = filterMenuContainer.cloneNode(true);
+    filterMenuContainer.parentNode.replaceChild(newFilterMenuContainer, filterMenuContainer);
+
+    newFilterMenuContainer.addEventListener("click", (e) => {
+        // Toggle Accordion
+        const toggle = e.target.closest(".filter-toggle");
+        if (toggle) {
+            const dropdown = toggle.nextElementSibling;
+            if (dropdown) dropdown.classList.toggle("hidden");
+            return;
+        }
+
+        // Apply/Remove Filter Option
+        const button = e.target.closest(".filter-button");
+        if (button) {
+            if (button.classList.contains("active")) {
+                removeFilter(products, button.dataset.key, button.dataset.value);
+            } else {
+                addFilter(products, button.dataset.key, button.dataset.value);
+            }
+        }
+    });
+
+    // 5. Related Products Event Listener
     const relatedContainer = document.querySelector("#sp-related-container");
-    // Cloning to prevent duplicate listeners if loadBrowse is called multiple times
     const newRelatedContainer = relatedContainer.cloneNode(true);
     relatedContainer.parentNode.replaceChild(newRelatedContainer, relatedContainer);
 
