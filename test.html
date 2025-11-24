@@ -1,0 +1,77 @@
+
+<head>
+    <meta charset="utf-8" />
+    <script type="module" src="main.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+
+<article id="singleproduct" class=" p-6">
+    <nav class="text-sm text-gray-500 mb-6">
+        <span class="cursor-pointer hover:text-black" id="sp-breadcrumb-home">Home</span> &gt; 
+        <span id="sp-breadcrumb-gender">Gender</span> &gt; 
+        <span id="sp-breadcrumb-category">Category</span> &gt; 
+        <span id="sp-breadcrumb-title" class="font-bold text-black">Product Title</span>
+    </nav>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        
+        <div class="flex flex-col gap-4">
+            <div class="bg-gray-200 w-3/5 aspect-square flex items-center justify-center text-gray-400 text-xl">
+                Main Product Image
+            </div>
+            <div class="flex gap-4">
+                <div class="bg-gray-200 w-24 h-24"></div>
+                <div class="bg-gray-200 w-24 h-24"></div>
+            </div>
+        </div>
+
+        <div>
+            <h1 id="sp-title" class="text-3xl font-bold mb-2">Product Title</h1>
+            <p id="sp-price" class="text-xl text-gray-700 mb-6">$0.00</p>
+            
+            <h3 class="font-bold mb-1">Description</h3>
+            <p id="sp-description" class="text-gray-600 mb-6 leading-relaxed">
+                Product description goes here...
+            </p>
+
+            <div class="mb-4">
+                <span class="font-bold">Material: </span>
+                <span id="sp-material" class="text-gray-600">Cotton</span>
+            </div>
+
+            <div class="space-y-4 border-t border-gray-200 pt-6">
+                
+                <div>
+                    <h3 class="font-bold mb-2">Color</h3>
+                    <div id="sp-colors" class="flex gap-2">
+                        </div>
+                </div>
+
+                <div>
+                    <h3 class="font-bold mb-2">Size</h3>
+                    <div id="sp-sizes" class="flex gap-2">
+                        </div>
+                </div>
+
+                <div class="flex items-end gap-4 pt-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">Quantity</label>
+                        <input type="number" id="sp-quantity" value="1" min="1" class="w-20 p-2 border border-gray-300 rounded">
+                    </div>
+                    <button id="sp-add-btn" class="bg-black text-white px-8 py-2 rounded hover:bg-gray-800 transition">
+                        + Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="mt-16 border-t border-gray-300 pt-8">
+        <h2 class="text-2xl font-bold mb-6">Related Products</h2>
+        <div id="sp-related-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            </div>
+    </section>
+</article>
