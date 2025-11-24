@@ -178,7 +178,7 @@ export function removeFromCart(id, size, color, cartItemHtml) { // Add Color and
     cartItemData.quantity -= 1;
     cartData.quantity -= 1;
 
-    // update cart HTML
+    // update cart HTMLp
     updateCartProductHtml(cartItemHtml, cartItemData);
     //*NOTE TO ANT THIS CAN BE TURNED INTO A FUNCTION OR CONDENSED INTO UPDATECARTPRODUCT
     const newSubTotal = cartItemData.price * cartItemData.quantity;
