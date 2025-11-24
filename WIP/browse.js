@@ -139,7 +139,7 @@ function renderBrowse(products) {
 
         browseProduct.dataset.productId = `${product.id}`;
         title.textContent = `${product.name} + ${product.gender} + ${product.category}`;
-        price.textContent = `${product.price}`;
+        price.textContent = `$${product.price}`;
 
         sizes.textContent = `${product.sizes}`;
         colors.classList.add(`bg-[${product.color[0].hex}]`);
