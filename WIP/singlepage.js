@@ -1,72 +1,102 @@
-import { addToCart } from "./cart";
-import { renderBrowse } from "./browse";
+import { addToCart } from "./cart.js";
+import { showToast } from "./toast.js";
 
-export function populateSingleProduct(product, allProducts) { 
-    // 1. Update State
+// State tracks the currently selected options
+let currentSingleProductState = {
+    product: null,
+    color: null,
+    size: null,
+    quantity: 1
+};
+
+/* --- Helper Functions --- */
+
+function updateState(product) {
     currentSingleProductState.product = product;
-    currentSingleProductState.color = product.color[0] ? product.color[0].hex : "#000000"; 
-    currentSingleProductState.size = product.sizes[0] || "N/A";
+    // Safe check for color/size existence
+    currentSingleProductState.color = (product.color && product.color[0]) ? product.color[0].hex : "#000000";
+    currentSingleProductState.size = (product.sizes && product.sizes[0]) ? product.sizes[0] : "N/A";
     currentSingleProductState.quantity = 1;
+}
 
-    // 2. Breadcrumbs
+function updateBreadcrumbs(product) {
     document.querySelector("#sp-breadcrumb-gender").textContent = product.gender;
     document.querySelector("#sp-breadcrumb-category").textContent = product.category;
     document.querySelector("#sp-breadcrumb-title").textContent = product.name;
+}
 
-    // 3. Main Details
+function updateProductDetails(product) {
     document.querySelector("#sp-title").textContent = product.name;
     document.querySelector("#sp-description").textContent = product.description;
     document.querySelector("#sp-material").textContent = product.material;
-    
-    // Format Price
+
     const formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price);
     document.querySelector("#sp-price").textContent = formattedPrice;
-    
-    // Reset Quantity
+
     document.querySelector("#sp-quantity").value = 1;
+}
 
-    // 4. Image
-    const imgContainer = document.querySelector("#singleproduct .lg\\:col-span-8 > div:first-child");
-    if(imgContainer) {
-        imgContainer.innerHTML = `<img src="https://placehold.co/600x800?text=${encodeURIComponent(product.name)}" class="w-full h-full object-cover" alt="${product.name}">`;
+function updateProductImage(product) {
+    
+    const imgContainer = document.querySelector("#sp-image-container");
+    
+    if (imgContainer) {
+        imgContainer.textContent = ''; // Clear existing
+
+        const img = document.createElement('img');
+        img.src = `https://placehold.co/600x800?text=${encodeURIComponent(product.name)}`;
+        img.alt = product.name;
+        
+        img.className = "w-full h-full object-cover"; 
+
+        imgContainer.appendChild(img);
     }
+}
 
-    // 5. Render Colors
+function renderColorOptions(product) {
     const colorContainer = document.querySelector("#sp-colors");
     colorContainer.innerHTML = ""; 
-    product.color.forEach((c, index) => {
-        const btn = document.createElement("button");
-        btn.className = `w-8 h-8 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all ${index === 0 ? 'ring-2 ring-black' : ''}`;
-        btn.style.backgroundColor = c.hex;
-        btn.title = c.name;
-        
-        btn.addEventListener("click", (e) => {
-            Array.from(colorContainer.children).forEach(b => b.classList.remove('ring-2', 'ring-black'));
-            e.target.classList.add('ring-2', 'ring-black');
-            currentSingleProductState.color = c.hex;
-        });
-        colorContainer.appendChild(btn);
-    });
 
-    // 6. Render Sizes
+    if (product.color) {
+        product.color.forEach((c, index) => {
+            const btn = document.createElement("button");
+            btn.className = `w-8 h-8 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all ${index === 0 ? 'ring-2 ring-black' : ''}`;
+            btn.style.backgroundColor = c.hex;
+            btn.title = c.name;
+            
+            btn.addEventListener("click", (e) => {
+                Array.from(colorContainer.children).forEach(b => b.classList.remove('ring-2', 'ring-black'));
+                e.target.classList.add('ring-2', 'ring-black');
+                currentSingleProductState.color = c.hex;
+            });
+            colorContainer.appendChild(btn);
+        });
+    }
+}
+
+function renderSizeOptions(product) {
     const sizeContainer = document.querySelector("#sp-sizes");
     sizeContainer.innerHTML = "";
-    product.sizes.forEach((s, index) => {
-        const btn = document.createElement("button");
-        btn.className = `w-12 h-10 border text-sm font-bold uppercase transition-colors ${index === 0 ? 'bg-black text-white border-black' : 'bg-white text-gray-900 border-gray-300 hover:border-black'}`;
-        btn.textContent = s;
 
-        btn.addEventListener("click", (e) => {
-            Array.from(sizeContainer.children).forEach(b => {
-                b.className = 'w-12 h-10 border border-gray-300 text-sm font-bold uppercase bg-white text-gray-900 hover:border-black transition-colors';
+    if (product.sizes) {
+        product.sizes.forEach((s, index) => {
+            const btn = document.createElement("button");
+            btn.className = `w-12 h-10 border text-sm font-bold uppercase transition-colors ${index === 0 ? 'bg-black text-white border-black' : 'bg-white text-gray-900 border-gray-300 hover:border-black'}`;
+            btn.textContent = s;
+
+            btn.addEventListener("click", (e) => {
+                Array.from(sizeContainer.children).forEach(b => {
+                    b.className = 'w-12 h-10 border border-gray-300 text-sm font-bold uppercase bg-white text-gray-900 hover:border-black transition-colors';
+                });
+                e.target.className = 'w-12 h-10 border border-black text-sm font-bold uppercase bg-black text-white transition-colors';
+                currentSingleProductState.size = s;
             });
-            e.target.className = 'w-12 h-10 border border-black text-sm font-bold uppercase bg-black text-white transition-colors';
-            currentSingleProductState.size = s;
+            sizeContainer.appendChild(btn);
         });
-        sizeContainer.appendChild(btn);
-    });
+    }
+}
 
-    // 7. Setup Add to Cart Button
+function setupAddToCartButton() {
     const oldBtn = document.querySelector("#sp-add-btn");
     const newBtn = oldBtn.cloneNode(true);
     oldBtn.parentNode.replaceChild(newBtn, oldBtn);
@@ -81,16 +111,14 @@ export function populateSingleProduct(product, allProducts) {
             currentSingleProductState.color, 
             currentSingleProductState.size
         );
-        alert(`Added ${qty} ${currentSingleProductState.product.name} to cart`);
+        showToast(`Added ${qty} ${currentSingleProductState.product.name} to bag`);
     });
+}
 
-
-    // 8. Related Products Section
-
+function renderRelatedProducts(product, allProducts) {
     const relatedContainer = document.querySelector("#sp-related-container");
-    relatedContainer.innerHTML = ""; // Clear previous items
+    relatedContainer.innerHTML = ""; 
 
-    // Filter: SAME CATEGORY
     const relatedItems = allProducts
         .filter(p => p.category === product.category && p.id !== product.id)
         .slice(0, 5);
@@ -101,17 +129,27 @@ export function populateSingleProduct(product, allProducts) {
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector(".browse-product");
         
-        // Setup Data
         card.dataset.productId = p.id;
         card.querySelector(".title").textContent = p.name;
         card.querySelector(".price").textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(p.price);
         
-        // Setup Image
+        
         const img = card.querySelector("img");
         if(img) {
-            img.src = `https://placehold.co/600x800?text=${encodeURIComponent(p.name)}`;
+             img.src = `https://placehold.co/600x800?text=${encodeURIComponent(p.name)}`;
         }
 
         relatedContainer.appendChild(clone);
     });
+}
+
+export function populateSingleProduct(product, allProducts) {
+    updateState(product);
+    updateBreadcrumbs(product);
+    updateProductDetails(product);
+    updateProductImage(product);
+    renderColorOptions(product);
+    renderSizeOptions(product);
+    setupAddToCartButton();
+    renderRelatedProducts(product, allProducts);
 }
