@@ -264,6 +264,13 @@
             <td class="py-4 text-right"><span class="subtotal text-xs font-bold text-gray-900"></span></td>
         </tr>
     </template>
+    <article id="toast" class="fixed bottom-5 left-5 z-50 flex items-center gap-3 bg-black text-white px-6 py-4 shadow-2xl transform transition-all duration-500 translate-y-24 opacity-0 pointer-events-none">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        
+        <span id="toast-message" class="text-xs font-bold uppercase tracking-widest">Item Added to Bag</span>
+    </article>
 
 </body>
 </html>

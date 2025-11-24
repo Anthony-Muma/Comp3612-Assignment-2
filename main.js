@@ -5,7 +5,9 @@ import { initGenderView } from "./WIP/genderview.js";
 import { initHome } from "./WIP/home.js";
 import { initGroup, COLOR_GROUPS } from "./color.js";
 import { initGrouping, retrieve } from "./grouping.js";
+import { showToast } from "./WIP/toast.js";
 // import { initHome } from "./WIP/home.js";
+//import {populateSingleProduct}  from "./WIP/singlepage.js"
 
 // function loadHome(products) {
 //     initHome(products);
@@ -22,7 +24,7 @@ let currentSingleProductState = {
     quantity: 1
 };
 
-function populateSingleProduct(product, allProducts) { // <--- Updated Signature
+function populateSingleProduct(product, allProducts) { 
     // 1. Update State
     currentSingleProductState.product = product;
     currentSingleProductState.color = product.color[0] ? product.color[0].hex : "#000000"; 
@@ -102,7 +104,7 @@ function populateSingleProduct(product, allProducts) { // <--- Updated Signature
             currentSingleProductState.color, 
             currentSingleProductState.size
         );
-        alert(`Added ${qty} ${currentSingleProductState.product.name} to cart`);
+        showToast(`Added ${qty} ${currentSingleProductState.product.name} to bag`);
     });
 
 
@@ -162,7 +164,7 @@ function loadBrowse(products) {
                 const defaultColor = productData.color[0] ? productData.color[0].hex : "#000000";
                 const defaultSize = productData.sizes[0] || "One Size";
                 addToCart(productData, 1, defaultColor, defaultSize);
-                alert("Added to cart!"); 
+                showToast(`Added ${productData.name} to bag`);
             }
             return;
         }
@@ -238,7 +240,7 @@ function loadBrowse(products) {
              const defaultColor = productData.color[0] ? productData.color[0].hex : "#000000";
              const defaultSize = productData.sizes[0] || "One Size";
              addToCart(productData, 1, defaultColor, defaultSize);
-             alert("Added to cart!");
+             showToast(`Added ${productData.name} to bag`);
              return;
         }
 

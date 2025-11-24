@@ -1,3 +1,4 @@
+import { showToast } from "./toast.js";
 // OBJECT CONSTRUCTORS
 
 function singleCartItemObject(id, quantity, name, price, color, size) {
@@ -297,7 +298,7 @@ function updateOrderSummary() {
 // 4. Checkout Logic
 function handleCheckout() {
   localStorage.removeItem("cart");
-  alert("Order placed! Returning to home."); // Replace with toast
+  showToast("Order placed! Returning to home.");
   document.querySelector("#nav-home").click(); // Navigate home
 
   const emptyCart = { quantity: 0, content: [] };
