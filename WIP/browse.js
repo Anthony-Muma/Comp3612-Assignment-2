@@ -131,6 +131,7 @@ function renderBrowse(products) {
         const clone = productTemplate.content.cloneNode(true);
         
         const browseProduct = clone.querySelector(".browse-product")
+        
         const title = clone.querySelector(".title");
         const price = clone.querySelector(".price");
         const sizes = clone.querySelector(".sizes span");
