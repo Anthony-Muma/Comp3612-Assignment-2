@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <script type="module" src="main.js"></script>
+    <script type="module" src="./js/main.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Tailwind CDN (CSS only, used for basic styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        .hidden {
-            display: none;
+        .active {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -29,8 +29,7 @@
                 <button id="nav-browse" class="px-3 py-1.5 text-sm rounded-md hover:bg-slate-100">Browse</button>
                 <button id="nav-about" class="px-3 py-1.5 text-sm rounded-md hover:bg-slate-100">About</button>
             </nav>
-            <button id="nav-cart"
-                    class="px-3 py-1.5 text-sm font-semibold rounded-md bg-slate-900 text-white hover:bg-slate-800">
+            <button id="nav-cart" class="px-3 py-1.5 text-sm font-semibold rounded-md bg-slate-900 text-white hover:bg-slate-800">
                 Cart ( <span>0</span> )
             </button>
         </div>
@@ -42,10 +41,10 @@
         <!-- HOME VIEW -->
         <article id="home" class="">
             <div id="home-hero"
-                 class="flex flex-col gap-4 px-6 py-10 text-white rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500">
+                class="flex flex-col gap-4 px-6 py-10 text-white rounded-xl bg-gradient-to-r from-orange-500 to-amber-500">
                 <h1 class="text-3xl font-bold">HOME VIEW</h1>
                 <p class="max-w-md text-sm text-sky-50">
-                    Welcome to the clothing SPA for COMP 3612 Assignment 2. Use the navigation above
+                    Welcome to the clothing shop for COMP 3612 Assignment 2. Use the navigation above
                     to browse products, view details, and manage your shopping cart.
                 </p>
             </div>
@@ -64,8 +63,7 @@
             <section id="filter" class="space-y-4">
                 <div class="p-4 space-y-3 bg-white border rounded-lg shadow-sm border-slate-200">
                     <h2 class="text-sm font-semibold">Sort By</h2>
-                    <select id="sort-by"
-                            class="w-full px-2 py-1 text-sm border rounded-md border-slate-300">
+                    <select id="sort-by" class="w-full px-2 py-1 text-sm border rounded-md border-slate-300">
                         <option value="name-asc">Name A-Z</option>
                         <option value="name-desc">Name Z-A</option>
                         <option value="price-desc">Price High-Low</option>
@@ -78,15 +76,12 @@
 
                     <!-- Gender -->
                     <div class="filter">
-                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-toggle"
-                                data-filter="gender">
+                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-toggle" data-filter="gender">
                             Gender
                         </button>
                         <div class="flex flex-wrap gap-2 mt-1 filter-dropdown" id="gender-filter">
-                            <button class="px-3 py-1 text-xs border rounded-full filter-button border-slate-300 hover:bg-slate-100"
-                                    data-key="gender" data-value="mens">Mens</button>
-                            <button class="px-3 py-1 text-xs border rounded-full filter-button border-slate-300 hover:bg-slate-100"
-                                    data-key="gender" data-value="womens">Womens</button>
+                            <button class="px-3 py-1 text-xs border rounded-full filter-button border-slate-300 hover:bg-slate-100" data-key="gender" data-value="mens">Mens</button>
+                            <button class="px-3 py-1 text-xs border rounded-full filter-button border-slate-300 hover:bg-slate-100" data-key="gender" data-value="womens">Womens</button>
                         </div>
                     </div>
 
@@ -139,7 +134,11 @@
                 </div>
 
                 <h2 id="result-number" class="text-sm text-slate-600">
-                    Showing <span>0</span> results...
+                    Showing <span>0</span> results
+                </h2>
+
+                <h2 id="no-result-message" class="hidden text-sm text-slate-600">
+                    Please modify selected filters
                 </h2>
 
                 <div id="filtered-product-container"
@@ -151,18 +150,29 @@
 
         <!-- MEN VIEW -->
         <article id="men" class="hidden space-y-3">
-            <h2 class="text-xl font-semibold">MEN</h2>
-            <div id="mens-categories" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <!-- JS add gender-category-template -->
+            <div id="men-hero"
+                 class="flex flex-col gap-4 px-6 py-10 text-white rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500">
+                <h1 class="text-3xl font-bold">MEN</h1>
             </div>
+            <section class="mt-10">
+                <h2 class="mb-6 text-2xl font-bold">Categories</h2>
+                <div id="mens-categories" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <!-- JS add gender-category-template -->
+                </div>
+            </section>
         </article>
 
         <!-- WOMEN VIEW -->
         <article id="women" class="hidden space-y-3">
-            <h2 class="text-xl font-semibold">WOMEN</h2>
-            <div id="womens-categories" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <!-- JS add gender-category-template -->
+            <div id="men-hero" class="flex flex-col gap-4 px-6 py-10 text-white rounded-xl bg-gradient-to-r from-rose-500 to-red-500">
+                <h1 class="text-3xl font-bold">Women</h1>
             </div>
+            <section class="mt-10">
+                <h2 class="mb-6 text-2xl font-bold">Categories</h2>
+                <div id="womens-categories" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <!-- JS add gender-category-template -->
+                </div>
+            </section>
         </article>
 
         <!-- SINGLE PRODUCT VIEW -->
@@ -309,7 +319,7 @@
         </article>
 
         <!-- ABOUT DIALOG -->
-        <dialog id="about" class="w-full max-w-lg p-0 overflow-hidden bg-white rounded-xl shadow-2xl backdrop:bg-slate-900/50">
+        <dialog id="about" class="w-full max-w-lg p-0 overflow-hidden bg-white shadow-2xl rounded-xl backdrop:bg-slate-900/50">
             <div class="flex items-center justify-between px-6 py-4 text-white bg-slate-900">
                 <h2 class="text-xl font-bold tracking-wide">About Us</h2>
                 <button id="close-about-btn" class="p-1 transition-colors rounded hover:bg-slate-700 focus:outline-none">
@@ -445,7 +455,7 @@
         </tr>
     </template>
 
-    <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 transition-all duration-300 transform translate-y-24 opacity-0 bg-slate-900 rounded-lg shadow-xl">
+    <div id="toast" class="fixed z-50 flex items-center gap-3 px-4 py-3 transition-all duration-300 transform translate-y-24 rounded-lg shadow-xl opacity-0 bottom-6 right-6 bg-slate-900">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>

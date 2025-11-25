@@ -1,4 +1,4 @@
-import { retrieve } from "../grouping.js";
+import { retrieve } from "./grouping.js";
 
 // DOM helper function -------------------------------------------------------------------------------
 
@@ -14,6 +14,10 @@ function createCategoryHtml(category, gender, amount) {
     
     const categoryName = genderCategory.querySelector(".category-name");
     categoryName.textContent = `${category} (${amount})`;
+
+    const img = clone.querySelector("img");
+    img.src = `https://placehold.co/600x800?text=${encodeURIComponent(category)}`;
+    img.alt = category;
 
     parent.appendChild(clone);
 }

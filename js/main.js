@@ -1,11 +1,12 @@
-import { initCart, addToCart, removeFromCart } from "./WIP/cart.js";
-import { initBrowse, addFilter, removeFilter, clearAllFilters, changeSort, loadProductHandlers } from "./WIP/browse.js"
-import { initGenderView } from "./WIP/genderview.js";
+import { initCart, addToCart, removeFromCart } from "./cart.js";
+import { initBrowse, addFilter, removeFilter, clearAllFilters, changeSort } from "./browse.js"
+import { initGenderView } from "./genderview.js";
 import { initGrouping } from "./grouping.js";
-import { populateSingleProduct } from "./WIP/singlepage.js"
-import { showToast } from "./WIP/toast.js";
-import { initHome } from "./WIP/home.js";
+import { populateSingleProduct } from "./singlepage.js"
+import { showToast } from "./toast.js";
+import { initHome } from "./home.js";
 
+const url = "https://gist.githubusercontent.com/rconnolly/d37a491b50203d66d043c26f33dbd798/raw/37b5b68c527ddbe824eaed12073d266d5455432a/clothing-compact.json"
 function loadBrowse(products) {
     // Init Browse
     initBrowse(products);
@@ -211,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const productData = localStorage.getItem("productData")
 
     if (!productData) {
-        fetch("./data/data-minifed.json")
+        fetch(url)
             .then(response => {
                 if (response.ok) {
                     return response.json();

@@ -1,6 +1,6 @@
 // import { totalGroupingCount } from "../datacount.js";
-import { retrieve } from "../grouping.js";
-import { colorGroupMap } from "../grouping.js";
+import { retrieve } from "./grouping.js";
+import { colorGroupMap } from "./grouping.js";
 
 // An object representing all current filters
 const activeFilters = {
@@ -188,8 +188,12 @@ function createFilterOptionHtml(key, value, color=null) {
     button.dataset.value = value;
     button.textContent = `${value}`;
 
+    // If it happens to be a color based option
     if (color) {
         button.style.backgroundColor = color;
+        button.style.color = "#FFFFFF";
+        button.style.textShadow = "0 0 3px #000000, 0 0 5px #000000";
+
     }
 
     parent.appendChild(clone);
@@ -254,8 +258,11 @@ function renderProductHtml(products) {
     const resultCount = document.querySelector("#result-number span");
     resultCount.textContent = products.length;
 
+    const noResultMessage = document.querySelector("#no-result-message");
     if (products.length === 0) {
-
+        noResultMessage.classList.remove("hidden");
+    } else {
+        noResultMessage.classList.add("hidden");
     }
 }
 
