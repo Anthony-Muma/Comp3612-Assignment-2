@@ -29,6 +29,10 @@ function initGenderCategories(gender) {
     // [""] used to stop traversal beyond category in the grouping tree
     const available = retrieve([gender], [], [""], [""]);
     const categories = available.category;
+    
+    // Clear loading screen
+    document.querySelector(`#${gender}-categories`).innerHTML = "";
+    
 
     for (const category in categories) {
         createCategoryHtml(category, gender, categories[category]);

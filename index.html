@@ -50,9 +50,9 @@
             </div>
             <section class="mt-10">
                 <h2 class="mb-6 text-2xl font-bold">Featured Products</h2>
-                <div id="featured-product-container" 
-                     class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    </div>
+                <div id="featured-product-container" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="w-12 h-12 border-4 rounded-full border-slate-500 loading border-t-transparent animate-spin"></div>
+                </div>
             </section>
         </article>
 
@@ -87,8 +87,7 @@
 
                     <!-- Category -->
                     <div class="filter">
-                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-dropdown"
-                                data-filter="category">
+                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-dropdown" data-filter="category">
                             Category
                         </button>
                         <div class="flex flex-wrap gap-2 mt-1 filter-dropdown" id="category-filter">
@@ -98,8 +97,7 @@
 
                     <!-- Size -->
                     <div class="filter">
-                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-toggle"
-                                data-filter="sizes">
+                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-toggle" data-filter="sizes">
                             Size
                         </button>
                         <div class="flex flex-wrap gap-2 mt-1 filter-dropdown" id="sizes-filter" data-type="single">
@@ -109,8 +107,7 @@
 
                     <!-- Color -->
                     <div class="filter">
-                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-toggle"
-                                data-filter="color">
+                        <button class="flex items-center justify-between w-full py-2 text-sm font-medium filter-toggle" data-filter="color">
                             Color
                         </button>
                         <div class="flex flex-wrap gap-2 mt-1 filter-dropdown" id="colorGroup-filter" data-type="single">
@@ -122,10 +119,8 @@
 
             <!-- Results -->
             <section id="result" class="space-y-4">
-                <div id="active-filters"
-                     class="flex flex-wrap items-center gap-2 text-xs">
-                    <button id="clear-filter"
-                            class="px-3 py-1 border rounded-full border-slate-300 text-slate-700 hover:bg-slate-100">
+                <div id="active-filters" class="flex flex-wrap items-center gap-2 text-xs">
+                    <button id="clear-filter" class="px-3 py-1 border rounded-full border-slate-300 text-slate-700 hover:bg-slate-100">
                         X Clear All
                     </button>
                     <span id="current-filters" class="flex flex-wrap gap-2">
@@ -141,9 +136,9 @@
                     Please modify selected filters
                 </h2>
 
-                <div id="filtered-product-container"
-                     class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div id="filtered-product-container" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- contains products based on filters -->
+                    <div class="w-12 h-12 border-4 rounded-full border-slate-500 loading border-t-transparent animate-spin"></div>
                 </div>
             </section>
         </article>
@@ -158,6 +153,7 @@
                 <h2 class="mb-6 text-2xl font-bold">Categories</h2>
                 <div id="mens-categories" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- JS add gender-category-template -->
+                    <div class="w-12 h-12 border-4 rounded-full border-slate-500 loading border-t-transparent animate-spin"></div>
                 </div>
             </section>
         </article>
@@ -171,6 +167,7 @@
                 <h2 class="mb-6 text-2xl font-bold">Categories</h2>
                 <div id="womens-categories" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- JS add gender-category-template -->
+                    <div class="w-12 h-12 border-4 rounded-full border-slate-500 loading border-t-transparent animate-spin"></div>
                 </div>
             </section>
         </article>
@@ -186,8 +183,7 @@
 
             <div class="grid gap-6 md:grid-cols-[minmax(0,2fr),minmax(0,3fr)] items-start">
                 <div>
-                    <div id="sp-image-container"
-                         class="aspect-[3/4] w-full rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
+                    <div id="sp-image-container" class="aspect-[3/4] w-full rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
                         Main Product Image
                     </div>
                     <div class="flex justify-between mt-2 text-xs text-slate-500">
@@ -222,11 +218,9 @@
                         <div class="flex items-end gap-3">
                             <div>
                                 <label class="block mb-1 text-xs font-medium text-slate-500">Qty</label>
-                                <input type="number" id="sp-quantity" value="1" min="1"
-                                       class="w-20 px-2 py-1 text-sm border rounded-md border-slate-300">
+                                <input type="number" id="sp-quantity" value="1" min="1" class="w-20 px-2 py-1 text-sm border rounded-md border-slate-300">
                             </div>
-                            <button id="sp-add-btn"
-                                    class="px-4 py-2 text-sm font-semibold text-white rounded-md bg-slate-900 hover:bg-slate-800">
+                            <button id="sp-add-btn" class="px-4 py-2 text-sm font-semibold text-white rounded-md bg-slate-900 hover:bg-slate-800">
                                 Add to Shopping Bag
                             </button>
                         </div>
@@ -274,8 +268,7 @@
                     <div class="flex gap-4">
                         <div class="flex-1">
                             <label class="block mb-1 text-xs font-medium text-slate-600">Destination</label>
-                            <select id="cart-destination"
-                                    class="w-full px-2 py-1 text-sm border rounded-md border-slate-300">
+                            <select id="cart-destination" class="w-full px-2 py-1 text-sm border rounded-md border-slate-300">
                                 <option value="Canada">Canada</option>
                                 <option value="US">United States</option>
                                 <option value="Int">International</option>
@@ -283,8 +276,7 @@
                         </div>
                         <div class="flex-1">
                             <label class="block mb-1 text-xs font-medium text-slate-600">Method</label>
-                            <select id="cart-shipping-method"
-                                    class="w-full px-2 py-1 text-sm border rounded-md border-slate-300">
+                            <select id="cart-shipping-method" class="w-full px-2 py-1 text-sm border rounded-md border-slate-300">
                                 <option value="Standard">Standard</option>
                                 <option value="Express">Express</option>
                                 <option value="Priority">Priority</option>
@@ -310,8 +302,7 @@
                             <span>Total</span><span id="summary-total">$0.00</span>
                         </div>
                     </div>
-                    <button id="btn-checkout"
-                            class="w-full py-2 mt-2 text-sm font-semibold text-white rounded-md bg-slate-900 hover:bg-slate-800 disabled:opacity-50">
+                    <button id="btn-checkout" class="w-full py-2 mt-2 text-sm font-semibold text-white rounded-md bg-slate-900 hover:bg-slate-800 disabled:opacity-50">
                         Proceed to Checkout
                     </button>
                 </section>
