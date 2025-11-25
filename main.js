@@ -1,22 +1,12 @@
-//import { addToCart, removeFromCart, cartObject } from "./cartLogic.js";
-import { addToCart, renderCart, removeFromCart} from "./WIP/cart.js";
+import { initCart, addToCart, removeFromCart} from "./WIP/cart.js";
 import { initBrowse, addFilter, removeFilter, clearAllFilters, changeSort} from "./WIP/browse.js"
 import { initGenderView } from "./WIP/genderview.js";
-import { initHome } from "./WIP/home.js";
-import { initGroup, COLOR_GROUPS } from "./color.js";
-import { initGrouping, retrieve } from "./grouping.js";
-// import { initHome } from "./WIP/home.js";
+import { initGrouping } from "./grouping.js";
+import {populateSingleProduct}  from "./WIP/singlepage.js"
 
-// function loadHome(products) {
-//     initHome(products);
-
-
-// }
 function loadBrowse(products) {
     // Init Browse
     initBrowse(products);
-
-    // Browse Events
 
     // Product Container Events
     const productContainer = document.querySelector("#filtered-product-container");
@@ -25,12 +15,14 @@ function loadBrowse(products) {
 
         // Add To Cart TODO: changed to view product
         if (element.classList.contains("add-to-cart")) {
-            // CLEAN
-            const selectedProductId = element.parentNode.dataset.productId;
-            const productData = products.find(element => element.id == selectedProductId)
-            addToCart(productData); // Change to product view
-        }
+           
+            const selectedProductId = element.parentNode.dataset.productId; // Would've been better to have this within the button
+            const productData = products.find(element => element.id === selectedProductId)
 
+            // addToCart(productData); // Change to product view
+            populateSingleProduct(productData, products); 
+            swapView("singleproduct");
+        }
     });
 
     // Filter Tag Events
@@ -43,20 +35,20 @@ function loadBrowse(products) {
             removeFilter(products, element.dataset.key, element.dataset.value);
 
         // Remove All Filters Via Tag
-        } else if (element.id="clear-filter") {
+        } else if (element.id === "clear-filter") {
             clearAllFilters(products);
         }
     });
 
     // Filter Menu Container Events
-    const filterMenuContainer = document.querySelector("#filter")
+    const filterMenuContainer = document.querySelector("#filter") // change to div around the filter
     filterMenuContainer.addEventListener("click", (e)=>{
         const element = e.target;
 
         // Filter Dropdown Logic
         if (element.classList.contains("filter-toggle")) {
             //...
-
+            
         // Filter Option
         } else if (element.classList.contains("filter-button")) {
 
@@ -71,19 +63,30 @@ function loadBrowse(products) {
         }
 
     });
+
+    // Sort Selection Event
+    const sortBySelection = document.querySelector("#sort-by");
+    sortBySelection.addEventListener("change", (e)=>{
+        const value = sortBySelection.value.split("-",2);
+        const type = value[0];
+        const order = value[1] === "asc"
+
+        changeSort(products, type, order);
+    });
 }
 
 function loadGenderView(products) {
-    // Init
+    // Init Gender View
     initGenderView(products);
 
+    // Gender Category Icon Event
     function onClickCategories(e) {
         const element = e.target
-        console.log(e.nodeName);
+
         if (element.dataset.category || element.parentNode.dataset.category) {
             const gender = element.dataset.gender ?? element.parentNode.dataset.gender;
             const category = element.dataset.category ?? element.parentNode.dataset.category;
-            console.log(category);
+
             // apply filter
             clearAllFilters(products);
             addFilter(products, "gender", gender);
@@ -94,63 +97,51 @@ function loadGenderView(products) {
         }
     }
 
+    // Men Category Icon Events
     const mensCategories = document.querySelector("#mens-categories");
     mensCategories.addEventListener("click", onClickCategories);
 
+    // Women Category Icon Events
     const womensCategories = document.querySelector("#womens-categories");
     womensCategories.addEventListener("click", onClickCategories);
-
-    // Add events for featured
-
 }
 
 function loadCart(products) {
-    renderCart(products);
+    // Init Cart
+    initCart(products);
 
-    // Cart Events
-    document.querySelector("#cart-product-container").addEventListener("click", (e) => {
+    // Cart Events 
+    // NOTE: Some cart events are within cart.js
+    document.querySelector("#cart-product-container").addEventListener("click", (e)=>{
         const element = e.target;
 
         if (element.classList.contains("remove-from-cart")) {
-            const parent = element.parentNode;
-            removeFromCart(parent.dataset.productId, parent); // Add color and size
+            const parent = element.closest(".cart-product");
+            removeFromCart(parent.dataset.productId, parent.dataset.size, parent.dataset.color, parent);
         }
     });
 }
 
-
 function loadAll(products) {
-    loadBrowse(products);
     loadGenderView(products);
+    loadBrowse(products);
     loadCart(products);
-    
 }
 
-// hides 
 function swapView(articleId) {
     const articles = document.querySelectorAll("main article");
     for (let article of articles) {
         if (article.id == articleId) {
-            // make hidden
-            
-            article.style.display = "block"
+            article.classList.remove("hidden");
         } else {
-            article.style.display = "none"
-            // make hidden
+            article.classList.add("hidden");
         }
     }
 }
 
-function aboutPopupOpen() {
-
-}
-
-function aboutPopupClose() {
-
-}
-
 document.addEventListener("DOMContentLoaded", ()=>{
-    // Swap Event
+    // Swap Events
+    document.querySelector("#header-logo").addEventListener("click", ()=>{swapView("home")});
     document.querySelector("#nav-home").addEventListener("click", ()=>{swapView("home")});
     document.querySelector("#nav-women").addEventListener("click", ()=>{swapView("women")});
     document.querySelector("#nav-men").addEventListener("click", ()=>{swapView("men")});
@@ -160,7 +151,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
     swapView("home");
 
     // About setup
-    document.querySelector("#nav-about").addEventListener("click", ()=>{aboutPopupOpen()});
+    const dialog = document.querySelector("#about");
+    document.querySelector("#nav-about").addEventListener("click", ()=>{dialog.showModal();});
+    dialog.addEventListener("click", (e)=>{dialog.close();});
 
     const productData = localStorage.getItem("productData")
     
@@ -168,25 +161,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
         fetch("./data/data-minifed.json")
         .then(response=>{
             if (response.ok) {
-                return response.json()
+                return response.json();
             } else {
-                throw new Error("fetch failed")
+                throw new Error("fetch failed");
             }
         })
         .then(data=>{
-            initGroup(data);
             initGrouping(data);
-            localStorage.setItem("productData", JSON.stringify(data))
+            localStorage.setItem("productData", JSON.stringify(data));
             loadAll(data);
-
         })
-        // .catch(err=>{
-        //     alert(err);
-        // });
+        .catch(err=>{
+            localStorage.clear();
+            alert("An error has occurred, please try again later");
+        });
                 
     } else {
         initGrouping(JSON.parse(productData));
-        retrieve(["mens"],["Bottoms", "Tops"],["M","XS",'0']);
         loadAll(JSON.parse(productData));
     }
 });

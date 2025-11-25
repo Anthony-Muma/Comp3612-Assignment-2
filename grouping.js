@@ -1,16 +1,60 @@
-// loads along with the products
-// Actually turned out super clean
-// EXTRA STUFF, used for quickly get filter counts, which category have certain sizes, which gender have certain categories etc...
-// 5AM coding
+// Uses a tree like structure used for retrieving related groups based on a hierarchy:
+// Used for quickly get filter counts, which category have certain sizes, which gender have certain categories etc...
+// NOTE: color name gets saved, use colorGroupMap to get hex from name
 
-// Limitation, ONLY does top down, not bottom up counts. i.e good for getting the count of size and colors count for gender / 
-// REASON: intersection ()
+/*
+    root
+        |>mens (30)
+            (category)
+            |>Tops (12)
+                (size)
+                |>XS (11)
+                |>S (12)
+                ...
+                (Color)
+                |>Blue (7) # Assuming a product can have multiple colors
+                |>Black (9)
+            |>Bottoms (18)
+                (size)
+                |>S ..
+                |>XL ..
+                ...
+                (Color)
+                |>Blue ..
+                |>Red ..
+                
+        |>womens (70)
+            (category)
+            |>Tops (40)
+                (size)
+                |>XS (35)
+                |>S (34)
+                ...
+                (Color)
+                |>Pink (40)
+                |>Red (12)
+            |>Accessories 
+                (size)
+                |>One-Size
+                ...
+                (Color)
+                |>Grey
+
+*/
+
+// LIMITATION: ONLY does top down, not bottom up counts. 
+// Good for getting the count of size and colors count for a category 
+// Not good for getting count of gender using only size
+// REASON: intersection between sizes and colors make it fairly difficult to count upwards
+
+// loads along with the products
+
+// An object constructor used as the tree nodes
 function TreeNode() {
     this.count = 0;
     this.childrenNodes = {};
     
     this.addChildNode = function (group, name) {
-
         if (!this.childrenNodes[group]) {this.childrenNodes[group] = {}}
         this.childrenNodes[group][name] = new TreeNode(); 
         return this.childrenNodes[group][name];
@@ -21,120 +65,110 @@ function TreeNode() {
         return this.childrenNodes[group][name];
     };
 
-    this.getChildrenNode = function (group) {return this.childrenNodes.group}
-
     this.increaseCount = function () {this.count++;};
 }
 
-
-// tells what group specified category are in (I.e gender)
-// sweater - > mens, womens
-// dresses - > womens
-// add color group
+// Sets containing everything seen from the product list
 const genderSet = new Set();
 const categorySet = new Set();
 const sizeSet = new Set();
-const colorGroupSet = new Set();
 
+// color name -> color hex
+export const colorGroupMap = new Map();
+
+// Main tree
 const groupings = {};
 
-// Get the counts of non-
-export function retrieve(genders=[], categories=[], sizes=[], colorGroups=[]) { //,... Move
-    const object = {
-        gender : {},
-        category : {},
-        size : {},
-        colorGroup : {}
-    }
+// Returns counts for gender/category/size/colorGroup, 
+// based on provided filter lists.
+// Only displays children with counts >= 1
+// Empty arrays = "match all".
+export function retrieve(genders=[], categories=[], sizes=[], colorGroups=[]) {
 
-    // TODO, if (genders.length === 0) {...}
+    const result = { gender: {}, category: {}, size: {}, colorGroup: {} };
 
-    if (genders.length === 0) {genders = Array.from(genderSet)}
-    if (categories.length === 0) {categories = Array.from(categorySet)}
-    if (sizes.length === 0) {sizes = Array.from(sizeSet)}
-    if (colorGroups.length === 0) {colorGroups = Array.from(colorGroupSet)}
+    const genderList = genders.length === 0 ? Array.from(genderSet) : genders;
+    const categoryList = categories.length  === 0 ? Array.from(categorySet) : categories;
+    const sizeList = sizes.length === 0 ? Array.from(sizeSet) : sizes;
+    const colorGroupList = colorGroups.length === 0 ? Array.from(colorGroupMap.keys()) : colorGroups;
 
+    // Root level
     const root = groupings.root;
     
-    //let genderTotalCount = 0;
-    for (let gender of genders) {
+    // Gender level
+    for (let gender of genderList) {
         const genderLevel = root.getChildNode("gender", gender);
+        if (!genderLevel) {continue};
 
-        object.gender[gender] = object.gender[gender] ? object.gender[gender] + genderLevel.count : genderLevel.count ;
+        result.gender[gender] = result.gender[gender] ? result.gender[gender] + genderLevel.count : genderLevel.count ;
 
-        
-        // let categoryTotalCount = 0;
-        for (let category of categories) {
+        // Category level
+        for (let category of categoryList) {
             const categoryLevel = genderLevel.getChildNode("category", category);
             if (!categoryLevel) {continue};
             
-            object.category[category] = object.category[category] ? object.category[category] + categoryLevel.count : categoryLevel.count;
+            result.category[category] = result.category[category] ? result.category[category] + categoryLevel.count : categoryLevel.count;
 
-            let sizeTotalCount = 0;
-            for (let size of sizes) {
+            // Size level
+            for (let size of sizeList) {
                 const sizeLevel = categoryLevel.getChildNode("size", size);
                 if (!sizeLevel) {continue};
 
-                object.size[size] = object.size[size] ? object.size[size] + sizeLevel.count : sizeLevel.count ;
-                //sizeTotalCount += sizeLevel.count; Cannot due to intersections
-
-                // More nested
+                result.size[size] = result.size[size] ? result.size[size] + sizeLevel.count : sizeLevel.count ;
             }
 
-            for (let color of colorGroups) {
+            // Color level
+            for (let color of colorGroupList) {
                 const colorLevel = categoryLevel.getChildNode("colorGroup", color);
                 if (!colorLevel) {continue};
 
-                object.colorGroup[color] = object.colorGroup[color] ? object.colorGroup[color] + colorLevel.count : colorLevel.count ;
-                //sizeTotalCount += sizeLevel.count; Cannot due to intersections
-
-                // More nested
+                result.colorGroup[color] = result.colorGroup[color] ? result.colorGroup[color] + colorLevel.count : colorLevel.count ;
             }
-
-
-
-            // object.category[category] = sizeTotalCount
-            // categoryTotalCount += sizeTotalCount;
         }
-
-        // object.gender[gender] = categoryTotalCount;
-        // genderTotalCount += categoryTotalCount;
-
     }
-    return object;
+    return result;
 }
+
+// Must be called once after products are loaded.
+// Populates the tree + sets used by retrieve().
 export function initGrouping(products) {
-    // gender -> category -> size -> groupColor (Not yet added)
+    // gender -> category -> size + groupColor
+
+    // Create root node
     groupings.root = new TreeNode();
+
+    // Root level
     const root = groupings.root;
 
     for (let product of products) {
         root.increaseCount();
         
+        // Gender level
         const gender = product.gender;
         const genderLevel = root.getChildNode("gender", gender) ?? root.addChildNode("gender", gender);
         genderSet.add(gender);
         genderLevel.increaseCount();
 
+        // Category level
         const category = product.category;
         const categoryLevel = genderLevel.getChildNode("category", category) ?? genderLevel.addChildNode("category", category);
         categorySet.add(category);
         categoryLevel.increaseCount();
 
+        // size level
         for (let size of product.sizes) {
             const sizeLevel = categoryLevel.getChildNode("size", size) ?? categoryLevel.addChildNode("size", size);
             sizeSet.add(size);
             sizeLevel.increaseCount();
-            
+         
         }
 
-        for (let color of product.colorGroup) {
-            const colorLevel = categoryLevel.getChildNode("colorGroup", color) ?? categoryLevel.addChildNode("colorGroup", color);
-            colorGroupSet.add(color);
+        // Color level 
+        // NOTE: color name gets saved, use colorGroupMap to get hex from name
+        for (let color of product.color) {
+            const colorLevel = categoryLevel.getChildNode("colorGroup", color.name) ?? categoryLevel.addChildNode("colorGroup", color.name);
+            colorGroupMap.set(color.name, color.hex);
             colorLevel.increaseCount();
         }
-        
     }
-
-    console.log(groupings);
 }

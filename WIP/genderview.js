@@ -1,6 +1,7 @@
 import { retrieve } from "../grouping.js";
 
-// 
+// DOM helper function -------------------------------------------------------------------------------
+
 function createCategoryHtml(category, gender, amount) {
     const template = document.querySelector("#gender-category-template");
     const parent = document.querySelector(`#${gender}-categories`);
@@ -17,24 +18,20 @@ function createCategoryHtml(category, gender, amount) {
     parent.appendChild(clone);
 }
 
+// Init -------------------------------------------------------------------------------
 
-export function initGenderView(product) {
-    // Male
-    const maleCount = retrieve(["mens"]);
+function initGenderCategories(gender) {
+    // retrieve(gender, category, sizes, colorGroup)
+    // [""] used to stop traversal beyond category in the grouping tree
+    const available = retrieve([gender], [], [""], [""]);
+    const categories = available.category;
 
-    const maleCategories = maleCount.category;
-
-    for (let category in maleCategories) {
-        createCategoryHtml(category, "mens", maleCategories[category]);
+    for (const category in categories) {
+        createCategoryHtml(category, gender, categories[category]);
     }
-    
+}
 
-    // Female
-    const femaleCount = retrieve(["womens"]);
-
-    const femaleCategories = femaleCount.category;
-
-    for (let category in femaleCategories) {
-        createCategoryHtml(category, "womens", femaleCategories[category]);
-    }
+export function initGenderView() {
+    initGenderCategories("mens");
+    initGenderCategories("womens");
 }
