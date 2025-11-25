@@ -1,40 +1,32 @@
-import { initCart, addToCart, removeFromCart} from "./WIP/cart.js";
-import { initBrowse, addFilter, removeFilter, clearAllFilters, changeSort} from "./WIP/browse.js"
+import { initCart, addToCart, removeFromCart } from "./WIP/cart.js";
+import { initBrowse, addFilter, removeFilter, clearAllFilters, changeSort, loadProductHandlers } from "./WIP/browse.js"
 import { initGenderView } from "./WIP/genderview.js";
 import { initGrouping } from "./grouping.js";
-import {populateSingleProduct}  from "./WIP/singlepage.js"
+import { populateSingleProduct } from "./WIP/singlepage.js"
+import { showToast } from "./WIP/toast.js";
+import { initHome } from "./WIP/home.js";
 
 function loadBrowse(products) {
     // Init Browse
     initBrowse(products);
 
+
     // Product Container Events
     const productContainer = document.querySelector("#filtered-product-container");
-    productContainer.addEventListener("click", (e)=>{
-        const element = e.target;
-
-        // Add To Cart TODO: changed to view product
-        if (element.classList.contains("add-to-cart")) {
-           
-            const selectedProductId = element.parentNode.dataset.productId; // Would've been better to have this within the button
-            const productData = products.find(element => element.id === selectedProductId)
-
-            // addToCart(productData); // Change to product view
-            populateSingleProduct(productData, products); 
-            swapView("singleproduct");
-        }
-    });
+    if (productContainer) {
+        productContainer.addEventListener("click", (e) => handleProductCardClick(e, products));
+    }
 
     // Filter Tag Events
     const filterTagContainer = document.querySelector("#active-filters");
-    filterTagContainer.addEventListener("click", (e)=>{
+    filterTagContainer.addEventListener("click", (e) => {
         const element = e.target;
 
         // Remove Filter Via Tag
         if (element.classList.contains("filter-button")) {
             removeFilter(products, element.dataset.key, element.dataset.value);
 
-        // Remove All Filters Via Tag
+            // Remove All Filters Via Tag
         } else if (element.id === "clear-filter") {
             clearAllFilters(products);
         }
@@ -42,23 +34,23 @@ function loadBrowse(products) {
 
     // Filter Menu Container Events
     const filterMenuContainer = document.querySelector("#filter") // change to div around the filter
-    filterMenuContainer.addEventListener("click", (e)=>{
+    filterMenuContainer.addEventListener("click", (e) => {
         const element = e.target;
 
         // Filter Dropdown Logic
         if (element.classList.contains("filter-toggle")) {
             //...
-            
-        // Filter Option
+
+            // Filter Option
         } else if (element.classList.contains("filter-button")) {
 
             // Remove Filter Via Filter Option
             if (element.classList.contains("active")) {
                 removeFilter(products, element.dataset.key, element.dataset.value);
 
-            // Apply Filter Via Filter Option
+                // Apply Filter Via Filter Option
             } else {
-                addFilter(products, element.dataset.key , element.dataset.value);
+                addFilter(products, element.dataset.key, element.dataset.value);
             }
         }
 
@@ -66,8 +58,8 @@ function loadBrowse(products) {
 
     // Sort Selection Event
     const sortBySelection = document.querySelector("#sort-by");
-    sortBySelection.addEventListener("change", (e)=>{
-        const value = sortBySelection.value.split("-",2);
+    sortBySelection.addEventListener("change", (e) => {
+        const value = sortBySelection.value.split("-", 2);
         const type = value[0];
         const order = value[1] === "asc"
 
@@ -112,7 +104,7 @@ function loadCart(products) {
 
     // Cart Events 
     // NOTE: Some cart events are within cart.js
-    document.querySelector("#cart-product-container").addEventListener("click", (e)=>{
+    document.querySelector("#cart-product-container").addEventListener("click", (e) => {
         const element = e.target;
 
         if (element.classList.contains("remove-from-cart")) {
@@ -121,12 +113,66 @@ function loadCart(products) {
         }
     });
 }
+function loadRelatedHandler(products) {
+    const relatedContainer = document.querySelector("#sp-related-container");
+
+    // Safety check
+    if (relatedContainer) {
+        // Use the helper function
+        relatedContainer.addEventListener("click", (e) => handleProductCardClick(e, products));
+    }
+}
+
+// HELPER FUNCTION 
+function handleProductCardClick(e, products) {
+    const target = e.target;
+
+    // Select the card
+    const productCard = target.closest(".browse-product");
+    if (!productCard) return;
+
+    const selectedProductId = productCard.dataset.productId;
+    const productData = products.find(p => p.id === selectedProductId);
+
+    if (!productData) return;
+
+    // Handle add to cart click
+    if (target.closest(".add-to-cart")) {
+        const defaultColor = productData.color[0].hex;
+        const defaultSize = productData.sizes[0];
+
+        addToCart(productData, 1, defaultColor, defaultSize);
+        showToast(`Added ${productData.name} to bag`);
+    }
+    // Navigate to Load Single Product
+    else {
+        populateSingleProduct(productData, products);
+        swapView("singleproduct");
+        window.scrollTo(0, 0);
+    }
+}
+
+function loadHome(products) {
+    // Render the products
+    initHome(products);
+
+    const featuredContainer = document.querySelector("#featured-product-container");
+
+    // Safety check 
+    if (featuredContainer) {
+        // Use the helper function
+        featuredContainer.addEventListener("click", (e) => handleProductCardClick(e, products));
+    }
+}
 
 function loadAll(products) {
+    loadHome(products);
     loadGenderView(products);
     loadBrowse(products);
     loadCart(products);
+    loadRelatedHandler(products);
 }
+
 
 function swapView(articleId) {
     const articles = document.querySelectorAll("main article");
@@ -139,43 +185,50 @@ function swapView(articleId) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
     // Swap Events
-    document.querySelector("#header-logo").addEventListener("click", ()=>{swapView("home")});
-    document.querySelector("#nav-home").addEventListener("click", ()=>{swapView("home")});
-    document.querySelector("#nav-women").addEventListener("click", ()=>{swapView("women")});
-    document.querySelector("#nav-men").addEventListener("click", ()=>{swapView("men")});
-    document.querySelector("#nav-browse").addEventListener("click", ()=>{swapView("browse")});
-    document.querySelector("#nav-cart").addEventListener("click", ()=>{swapView("cart")});
-    
+    document.querySelector("#header-logo").addEventListener("click", () => { swapView("home") });
+    document.querySelector("#nav-home").addEventListener("click", () => { swapView("home") });
+    document.querySelector("#nav-women").addEventListener("click", () => { swapView("women") });
+    document.querySelector("#nav-men").addEventListener("click", () => { swapView("men") });
+    document.querySelector("#nav-browse").addEventListener("click", () => { swapView("browse") });
+    document.querySelector("#nav-cart").addEventListener("click", () => { swapView("cart") });
+
     swapView("home");
 
     // About setup
     const dialog = document.querySelector("#about");
-    document.querySelector("#nav-about").addEventListener("click", ()=>{dialog.showModal();});
-    dialog.addEventListener("click", (e)=>{dialog.close();});
+    document.querySelector("#nav-about").addEventListener("click", () => { dialog.showModal(); });
+    dialog.addEventListener("click", (e) => {
+        const isBackdropClick = e.target === dialog;
+        const isCloseBtnClick = e.target.closest("#close-about-btn");
+
+        if (isBackdropClick || isCloseBtnClick) {
+            dialog.close();
+        }
+    });
 
     const productData = localStorage.getItem("productData")
-    
+
     if (!productData) {
         fetch("./data/data-minifed.json")
-        .then(response=>{
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error("fetch failed");
-            }
-        })
-        .then(data=>{
-            initGrouping(data);
-            localStorage.setItem("productData", JSON.stringify(data));
-            loadAll(data);
-        })
-        .catch(err=>{
-            localStorage.clear();
-            alert("An error has occurred, please try again later");
-        });
-                
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("fetch failed");
+                }
+            })
+            .then(data => {
+                initGrouping(data);
+                localStorage.setItem("productData", JSON.stringify(data));
+                loadAll(data);
+            })
+            .catch(err => {
+                localStorage.clear();
+                alert("An error has occurred, please try again later");
+            });
+
     } else {
         initGrouping(JSON.parse(productData));
         loadAll(JSON.parse(productData));

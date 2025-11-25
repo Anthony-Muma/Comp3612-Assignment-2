@@ -119,9 +119,10 @@ function renderRelatedProducts(product, allProducts) {
     const relatedContainer = document.querySelector("#sp-related-container");
     relatedContainer.innerHTML = ""; 
 
+    // Filter for same category, excluding current product, take 4
     const relatedItems = allProducts
         .filter(p => p.category === product.category && p.id !== product.id)
-        .slice(0, 5);
+        .slice(0, 4);
 
     const template = document.querySelector("#browse-product-template");
 
@@ -129,14 +130,34 @@ function renderRelatedProducts(product, allProducts) {
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector(".browse-product");
         
+        //  Set ID
         card.dataset.productId = p.id;
+
+        // Set Title & Price
         card.querySelector(".title").textContent = p.name;
-        card.querySelector(".price").textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(p.price);
+        card.querySelector(".price").textContent = new Intl.NumberFormat('en-US', { 
+            style: 'currency', 
+            currency: 'USD' 
+        }).format(p.price);
         
-        
+        //  Set Image
         const img = card.querySelector("img");
         if(img) {
              img.src = `https://placehold.co/600x800?text=${encodeURIComponent(p.name)}`;
+             img.alt = p.name;
+        }
+
+        // 4. Set Sizes
+        const sizeSpan = clone.querySelector(".sizes span");
+        if (sizeSpan) {
+            sizeSpan.textContent = p.sizes.join(", ");
+        }
+
+        // 5. Set Color 
+        const colorSpan = clone.querySelector(".colors span");
+        if (colorSpan && p.color && p.color.length > 0) {
+            colorSpan.style.backgroundColor = p.color[0].hex;
+            colorSpan.title = p.color[0].name; // Tooltip
         }
 
         relatedContainer.appendChild(clone);

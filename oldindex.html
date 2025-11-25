@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <script type="module" src="main.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <header class="flex flex-row content-center justify-around w-full h-32 text-lg font-extrabold">
+        <button id="header-logo" class="size-32"><img src="data/logo.webp" alt="logo"/></button>
+        <nav class="flex content-center gap-2">
+            <button id="nav-home">Home</button>
+            <button id="nav-women">Women</button>
+            <button id="nav-men">Men</button>
+            <button id="nav-browse">Browse</button>
+            <button id="nav-about">About</button>
+        </nav>
+        <button id="nav-cart">Cart <span>0</span></button>
+    </header>
+
+    <main>
+        <article id="home">
+            Home View
+        </article>
+
+        <article id="browse" class="flex flex-row">
+            <section id="filter" class="w-64 px-6 py-6 text-sm text-gray-800 bg-gray-100 border-r border-gray-200">
+                <h2 class="mb-6 text-base font-semibold tracking-tight">Departments</h2>
+
+                <!-- Gender -->
+                <div class="mb-8 filter">
+                    <button class="flex items-center justify-between w-full mb-2 text-xs font-semibold tracking-wide text-gray-700 filter-toggle" data-filter="gender">Gender</button>
+                    <div class="space-y-1 filter-dropdown" id="gender-filter" data-type="single">
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="gender" data-value="mens">Mens</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="gender" data-value="womens">Womens</button>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="mb-8 filter">
+                    <button class="flex items-center justify-between w-full mb-2 text-xs font-semibold tracking-wide text-gray-700 filter-toggle" data-filter="category">Category</button>
+                    <div class="space-y-1 filter-dropdown" id="category-filter" data-type="single">
+                        <!-- <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Tops">Tops</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Bottoms">Bottoms</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Accessories">Accessories</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Sweaters">Sweaters</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Outerwear">Outerwear</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Dresses">Dresses</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Jumpsuits">Jumpsuits</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Shoes">Shoes</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Loungewear">Loungewear</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Intimates">Intimates</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Swimwear">Swimwear</button> -->
+                    </div>
+                </div>
+
+                <div class="mb-8 filter">
+                    <button class="flex items-center justify-between w-full mb-2 text-xs font-semibold tracking-wide text-gray-700 filter-toggle" data-filter="sizes">Size</button>
+                    <div class="space-y-1 filter-dropdown" id="sizes-filter" data-type="single">
+                        <!-- <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="sizes" data-value="XS">XS</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="sizes" data-value="S">S</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="sizes" data-value="M">M</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="sizes" data-value="L">L</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="sizes" data-value="XL">XL</button> -->
+                    </div>
+                </div>
+
+                <div class="mb-8 filter">
+                    <button class="flex items-center justify-between w-full mb-2 text-xs font-semibold tracking-wide text-gray-700 filter-toggle" data-filter="color">Color</button>
+                    <div class="space-y-1 filter-dropdown" id="colorGroup-filter" data-type="single">
+                        <!-- <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Black">Black</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="White">White</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Red">Red</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Green">Green</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Blue">Blue</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Yellow">Yellow</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Magenta">Magenta</button>
+                        <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="colorGroup" data-value="Gray">Gray</button> -->
+                    </div>
+                </div>
+
+
+            </section>
+            
+            <section id="result">
+                result
+                <div id="active-filters">
+                    <button id="clear-filter" class="px-4 py-2 font-bold text-white bg-gray-500 rounded-full hover:bg-gray-600">X Clear All</button>
+                    <span id="current-filters">
+                        <!-- contains current filter buttons -->
+
+                    </span>
+                </div>
+
+
+                <div id="filtered-product-container" class="flex flex-row flex-wrap h-screen gap-4 overflow-y-scroll justify-center-center">
+                    <!-- contains products based on filters -->
+
+                </div>
+            </section>
+        </article>
+
+        <article id="men">
+            MEN
+            <div id="mens-categories">
+                <!-- JS add gender-category-template -->
+            </div>
+        </article>
+
+        <article id="women">
+            WOMEN
+            <div id="womens-categories">
+                <!-- JS add gender-category-template -->
+            </div>
+        </article>
+
+        <article id="singleproduct">
+            single product
+        </article>
+
+        <article id="cart">
+            Cart View
+            <template id="cart-product-template">
+                <div class="flex flex-col content-center justify-center w-32 h-32 m-4 text-center cart-product bg-slate-300">
+                    <p class="title"></p>
+                    <p class="quantity"></p>
+                    <button class="remove-from-cart">-</button>
+                </div>
+            </template>
+            <div id="cart-product-container">
+
+            </div>
+        </article>
+    </main>
+    <footer>
+        <p>Footer</p>
+    </footer>
+</body>
+
+<!-- Templates  -->
+<template id="filter-template">
+    <button class="px-4 py-2 font-bold text-white bg-gray-500 rounded-full filter-button hover:bg-gray-600">
+        <p class="title"></p>
+    </button>
+</template>
+<template id="browse-product-template">
+    <div class="flex flex-col content-center justify-center w-32 h-64 m-4 text-center browse-product bg-slate-300">
+        <img scr="#" alt=""/>
+        <p class="title"></p>
+        <p class="price"></p>
+        <div class="sizes">
+            <span class="">M</span>
+        </div>
+        <div class="colors">
+            <span class="inline-block w-5 h-5 transition border border-black rounded-full cursor-pointer hover:ring-2 hover:border-black"></span>
+            <!-- <span class="inline-block w-5 h-5 transition bg-black border border-black rounded-full cursor-pointer hover:ring-2 hover:border-black"></span> -->
+        </div>
+
+        <button class="add-to-cart ">+</button>
+    </div>
+
+</template>
+<template id="gender-category-template">
+    <div class="gender-category" data-gender="" data-category="">
+        <img src="#" alt="Category"/>
+        <p class="category-name">FOO</p>
+        <p>EXPLORE</p>
+    </div>
+</template>
+<template id="filter-option-template">
+    <button class="block w-full text-xs text-left text-gray-800 filter-button hover:text-black" data-key="category" data-value="Tops">Tops</button>
+</template>
+
+</html>

@@ -234,11 +234,16 @@ function renderProductHtml(products) {
         const price = clone.querySelector(".price");
         const sizes = clone.querySelector(".sizes span");
         const colors = clone.querySelector(".colors span");
+        const img = clone.querySelector("img");
 
         browseProduct.dataset.productId = `${product.id}`;
-        title.textContent = `${product.name} + ${product.gender} + ${product.category}`;
+        title.textContent = `${product.name}`;
         price.textContent = `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price)}`;
-        sizes.textContent = `${product.sizes}`
+        sizes.textContent = product.sizes.join(", ");
+        if (img) {
+            img.src = `https://placehold.co/600x800?text=${encodeURIComponent(product.name)}`;
+            img.alt = product.name;
+        }
 
         colors.style.backgroundColor = product.color[0].hex;
         // colors.classList.add(`bg-[${product.color[0].hex}]`);
@@ -315,4 +320,36 @@ export function initBrowse(products) {
     updateFilterOptionsDisplayedHtml();
 
     changeSort(products, "name", true);
+}
+
+export function loadProductHandlers(products, selector) {
+    const container = document.querySelector(selector);
+
+    // Add listener for the "Related Products" section
+    container.addEventListener("click", (e) => {
+        const target = e.target;
+
+        // 1. Find the card
+        const productCard = target.closest(".browse-product");
+        if (!productCard) return;
+
+        const selectedProductId = productCard.dataset.productId;
+        const productData = products.find(p => p.id === selectedProductId);
+
+        if (!productData) return;
+
+        //  Add to Cart Click
+        if (target.closest(".add-to-cart")) {
+            const defaultColor = productData.color[0].hex;
+            const defaultSize = productData.sizes[0];
+
+            addToCart(productData, 1, defaultColor, defaultSize);
+            showToast(`Added ${productData.name} to bag`);
+        } 
+        //  Navigation Click (Load new product)
+        else {
+            populateSingleProduct(productData, products);
+            window.scrollTo(0, 0);
+        }
+    });
 }
