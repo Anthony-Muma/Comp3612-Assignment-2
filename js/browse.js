@@ -77,7 +77,7 @@ export function changeSort(products, sortBy="name", asc=true) {
         sortFn = asc ? categorySortASC : categorySortDESC;
     }
 
-    const sorted = [...products].sort(sortFn)
+    const sorted = products.sort(sortFn)
     renderProductHtml(getFilteredProducts(sorted));
 }
 
