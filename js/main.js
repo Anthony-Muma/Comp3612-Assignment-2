@@ -226,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadAll(data);
             })
             .catch(err => {
-                localStorage.clear();
                 alert("An error has occurred, please try again later");
             });
 
